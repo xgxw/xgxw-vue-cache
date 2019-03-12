@@ -1,9 +1,8 @@
 import { RouteConfig } from "vue-router";
 import Dialog from '@/views/wechat/Dialog.vue'
-import Home from '@/views/Home.vue';
 
-const dialog: RouteConfig = {
-  path: 'dialog',
+export const dialog: RouteConfig = {
+  path: '/wechat/dialog',
   name: 'dialog',
   component: Dialog,
   meta: {
@@ -11,14 +10,11 @@ const dialog: RouteConfig = {
   },
 };
 
-export const wechat: RouteConfig = {
-  path: 'wechat',
-  name: 'wechat',
-  component: Home,
-  children: [
-    dialog,
-  ],
-  meta: {
-    title: '微信相关',
-  },
-}
+// export const wechat: RouteConfig = {
+//   path: 'wechat',
+//   name: 'wechat',
+//   component: Home,
+//   meta: {
+//     title: '微信相关',
+//   },
+// }
