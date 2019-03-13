@@ -1,7 +1,26 @@
 $height:957px;
 $width:375px;
-.iphonex {
+$header-height: 30px;
+$wechat-status-height: 30px;
+$footer-height:7px;
+$footer-bottom:5px;
+.phone {
+  button {
+    border: 0px;
+    background-color: white;
+  }
+  position: absolute;
   border: 1px solid;
-  height: $height;
-  width: $width;
+  min-height: $height;
+  min-width: $width;
+  .footer {
+    height: $footer-height;
+    width: $width/2;
+    position: absolute;
+    bottom: $footer-bottom;
+    margin: 0 25%;
+    border: 1px solid;
+    border-radius: 10px;
+    background-color: black; // display: flex;
+  }
 }
