@@ -1,16 +1,16 @@
 <template>
-  <div v-html="content"></div>
+  <div v-html='content'></div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script lang='ts'>
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Markdown extends Vue {
   @Prop() private mkdoc!: string;
-  parse: any = null;
-  mounted() {
-    this.parse = require("markdown").markdown;
+  private parse: any = null;
+  private mounted() {
+    this.parse = require('markdown').markdown;
   }
   get content() {
     if (this.parse && this.mkdoc) {
@@ -20,5 +20,5 @@ export default class Markdown extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
 </style>
