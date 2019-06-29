@@ -44,11 +44,21 @@ export default class Home extends Vue {}
     background-color: #fff;
   }
 }
-@media screen and (max-width: 980px) {
+
+// 移动端界面
+@media screen and (min-width: $mobile-width) {
   .article {
     margin: 0 auto;
     padding: 30px;
     width: 65%;
+  }
+}
+
+// PC端界面
+@media screen and (max-width: $mobile-width) {
+  .article {
+    margin: 0 auto;
+    padding: 30px;
   }
 }
 </style>
