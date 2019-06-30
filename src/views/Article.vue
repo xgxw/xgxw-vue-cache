@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='container'>
     <div class="drawing-board"></div>
     <article class="article">
       <Markdown :mkdoc="content" />
@@ -45,7 +45,7 @@ export default class Home extends Vue {}
   }
 }
 
-// 移动端界面
+// PC端界面
 @media screen and (min-width: $mobile-width) {
   .article {
     margin: 0 auto;
@@ -54,7 +54,7 @@ export default class Home extends Vue {}
   }
 }
 
-// PC端界面
+// 移动端界面
 @media screen and (max-width: $mobile-width) {
   .article {
     margin: 0 auto;

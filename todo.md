@@ -1,6 +1,10 @@
-1. markdown 渲染
+功能
+1. 导航栏: 可收回
+2. 工具栏: 分享, 返回顶部等功能
+3. markdown编辑器(可考虑 jupyter)
+4. loader, 通知, 弹层输入
 
-博客样式: 要简洁, 越冷淡越好, 如类似 microsodt note, 左边三层折叠栏, 右边主要内容. 不过又很喜欢 cnblog 的那种中间文章(像一张纸)的效果(即原来那种样子)
+附加
 1. 好玩的博客样式如下: 游戏样式
    1. http://maxogden.github.io/slides/nodepdx/index.html
    2. http://www.rleonardi.com/
