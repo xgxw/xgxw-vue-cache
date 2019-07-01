@@ -13,7 +13,7 @@
 <script lang='ts'>
 import { Component, Prop, Vue } from "vue-property-decorator";
 import mavonEditor from "mavon-editor";
-import { Mode } from "@/constants/MavonEditor";
+import { Mode } from "@/constants/mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
 @Component({

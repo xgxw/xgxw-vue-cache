@@ -8,9 +8,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class Home extends Vue {
-  mounted() {
-    console.log("test")
-  }
+  mounted() {}
 }
 </script>
 <style lang='scss' scoped>

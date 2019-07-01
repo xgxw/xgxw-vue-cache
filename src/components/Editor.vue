@@ -1,17 +1,19 @@
 <template>
   <mavon-editor
-    v-model="content"
+    :value="content"
     :defaultOpen="mode"
     :subfield="subfield"
     :toolbars="toolbars"
     :toolbarsFlag="showToolbar"
+    @save="save"
+    @change="change"
   />
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, PropSync, Vue } from "vue-property-decorator";
 import mavonEditor from "mavon-editor";
-import { Mode, ToolbarsStyle } from "@/constants/MavonEditor";
+import { Mode, ToolbarsStyle } from "@/constants/mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
 @Component({
@@ -21,7 +23,9 @@ import "mavon-editor/dist/css/index.css";
 })
 export default class Editor extends Vue {
   @Prop() private isMobile!: boolean;
-  private content: string = "_init_";
+  @Prop() private save!: any;
+  @Prop() private change!: any;
+  @Prop() private content!: string;
   private mode: string = Mode.default;
   get subfield() {
     return !this.isMobile;

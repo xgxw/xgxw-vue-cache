@@ -15,9 +15,10 @@ const index: RouteConfig = {
   },
 };
 
-const articlePath: string = '/article/';
+export const fileID = "fid"
+const articlePath: string = '/article/:';
 const article: RouteConfig = {
-  path: articlePath + ':name',
+  path: articlePath + fileID,
   name: 'article',
   component: Article,
   meta: {
@@ -25,9 +26,9 @@ const article: RouteConfig = {
   },
 };
 
-const editorPath: string = '/editor/';
+const editorPath: string = '/editor/:';
 const editor: RouteConfig = {
-  path: editorPath + ':name',
+  path: editorPath + fileID,
   name: 'editor',
   component: Editor,
   meta: {
@@ -52,7 +53,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // 设置title
   if (to.path.startsWith(articlePath) || to.path.startsWith(editorPath)) {
-    document.title = to.meta.title + ' - ' + to.params.name;
+    document.title = to.meta.title + ' - ' + to.params[fileID];
   } else {
     document.title = to.meta.title;
   }

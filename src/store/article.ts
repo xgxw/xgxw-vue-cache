@@ -1,9 +1,5 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
-
-interface Article {
+export interface Article {
+  fid: string,
   name: string,
   content: string,
 }
@@ -16,8 +12,9 @@ interface State {
 const state: State = {
   fetching: true,
   data: {
-    name: "init",
-    content: "init",
+    fid: "",
+    name: "",
+    content: "",
   }
 }
 

@@ -16,3 +16,7 @@ src/assets 可以通过相对路径引入(webpack会处理路径关系), 可以�
 组建推荐 https://github.com/vuejs/awesome-vue
 
 deep selector, 在 scope 作用域中影响子组建. scss 只能使用 `::v-deep `
+
+vue3 ts 修饰词用法参考:
+https://github.com/vuejs/vue-class-component/blob/master/README.md
+https://github.com/kaorun343/vue-property-decorator

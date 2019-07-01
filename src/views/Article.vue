@@ -1,5 +1,5 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <div class="drawing-board"></div>
     <article class="article">
       <Markdown :mkdoc="content" />
@@ -22,7 +22,9 @@ import { mapGetters } from "vuex";
     })
   }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  mounted() {}
+}
 </script>
 <style lang='scss' scoped>
 @import "@/assets/css/base.scss";
