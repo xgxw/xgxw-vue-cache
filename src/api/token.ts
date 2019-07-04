@@ -1,10 +1,6 @@
-export enum TokenType {
-
-}
 export interface TokenInfo {
-    tokenType: TokenType
-    expiresIn: number
-    scope: string
+    expiresAt: number
+    token: string
 }
 
 export class TokenClient {
@@ -42,7 +38,7 @@ export class TokenClient {
                     return resolve(tokenInfo)
                 }
                 reject("json parse fail")
-            }).catch(reject)
+            }).catch(e => reject("找不到token"))
         })
     }
 

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router, { RouteConfig } from 'vue-router';
 import Home from '@/views/Home.vue';
+import Login from '@/views/Login.vue';
 import Article from '@/views/Article.vue';
 import Editor from '@/views/Editor.vue';
 
@@ -12,6 +13,16 @@ const index: RouteConfig = {
   component: Home,
   meta: {
     title: '瞎搞瞎玩',
+  },
+};
+
+export const loginRoutePath = "/login";
+const login: RouteConfig = {
+  path: loginRoutePath,
+  name: 'login',
+  component: Login,
+  meta: {
+    title: '登录',
   },
 };
 
@@ -41,6 +52,7 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     index,
+    login,
     article,
     editor,
     {

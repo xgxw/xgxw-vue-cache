@@ -1,5 +1,6 @@
 import { Article } from './article'
 import { client, FetchFileRequset, UploadFileRequset } from '@/api';
+import { RequestError, UnkownRequestError, UnauthorizedError, instanceOfRequestError } from '@/constants/error';
 
 type Editor = Article
 
@@ -9,14 +10,15 @@ interface State {
   data: Editor,
 };
 
+const defaultEditor: Editor = {
+  fid: "",
+  name: "",
+  content: "",
+}
 const state: State = {
   fetching: true,
   uploading: true,
-  data: {
-    fid: "",
-    name: "",
-    content: "",
-  }
+  data: defaultEditor,
 }
 
 const getters = {
@@ -36,7 +38,7 @@ const actions = {
   async fetchContent({ commit }, fid: string): Promise<any> {
     commit("fetchingContent", fid)
     return new Promise<any>((resolved, reject) => {
-      let editor: Editor;
+      let editor: Editor = defaultEditor;
       client.fetchFile({ fid: fid }).then(res => {
         editor = {
           fid: res.data.fid,
@@ -45,8 +47,11 @@ const actions = {
         }
         resolved()
       }).catch(e => {
+        if (instanceOfRequestError(e)) {
+          return reject(e)
+        }
         console.log("请求服务器发生错误: ", e)
-        reject("服务器开小差了")
+        reject(UnkownRequestError)
       }).finally(() => {
         commit("fetchingContentFinish", editor)
       })
@@ -74,8 +79,11 @@ const actions = {
       client.uploadFile(r).then(res => {
         resolved()
       }).catch(e => {
+        if (instanceOfRequestError(e)) {
+          return reject(e)
+        }
         console.log("请求服务器发生错误: ", e)
-        reject("服务器开小差了")
+        reject(UnkownRequestError)
       }).finally(() => {
         commit("uploadContentFinish")
       })

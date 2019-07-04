@@ -1,11 +1,6 @@
 <template>
   <div class="container">
-    <EditorComponent
-      :isMobile="isMobile"
-      :content="content"
-      :change="changeContent"
-      :save="uploadContent"
-    />
+    <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
 
@@ -15,6 +10,7 @@ import { default as EditorComponent } from "@/components/Editor.vue";
 import { MobileWidth } from "@/constants/constants";
 import { mapGetters, mapActions } from "vuex";
 import { fileID } from "../router";
+import { UnauthorizedError } from "../constants/error";
 
 @Component({
   components: {
@@ -43,7 +39,22 @@ export default class Editor extends Vue {
   mounted() {
     // TODO: 添加定时任务, 每1分钟自动执行一次uploadContent
     let fid = this.$route.params[fileID];
-    this.fetchContent(fid);
+    this.fetchContent(fid).catch(e => {
+      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+    });
+  }
+  change(data: string) {
+    this.changeContent(data).catch(e => {
+      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+    });
+  }
+  save(data: string) {
+    this.uploadContent(data).catch(e => {
+      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+      if (e == UnauthorizedError) {
+        // then 弹出输入密码浮层
+      }
+    });
   }
 }
 </script>

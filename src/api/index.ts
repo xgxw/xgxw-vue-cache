@@ -1,13 +1,9 @@
 import * as Axios from 'axios'
 import router from '@/router'
-import { client as tokenClient, TokenType } from './token'
+import { client as tokenClient, TokenInfo } from './token'
+import { UnauthorizedError, NotFoundError } from '@/constants/error';
 
 const baseURL = process.env.VUE_APP_BASE_URL
-const goAuthorizePage = () => {
-  tokenClient.delTokenInfo().then((res) => {
-    router.push("/login")
-  })
-}
 
 export class HTTPClient {
   private readonly axios: Axios.AxiosInstance;
@@ -27,10 +23,6 @@ export class HTTPClient {
           } catch (e) {
             data = {};
           }
-          if (data.status === 403) {
-            tokenClient.delTokenInfo()
-            router.push('/login');
-          }
           return data;
         },
       ],
@@ -47,7 +39,7 @@ export class HTTPClient {
   async uploadFile(r: UploadFileRequset): Promise<UploadFileResponse> {
     return this.authRequest({
       url: 'v1/file/' + r.fid,
-      method: "POST",
+      method: "PUT",
       data: {
         ...r
       }
@@ -57,44 +49,51 @@ export class HTTPClient {
   // Token相关
   async fetchToken(r: FetchTokenRequest): Promise<FetchTokenResponse> {
     return this.request({
-      url: "v1/token",
+      url: "v1/auth/token",
       method: "POST",
       data: {
-        client_id: "",
-        scope: "",
-        client_secret: "",
         ...r
       }
     })
   }
+  // authorization 认证请求
   async authorization(r: FetchTokenRequest): Promise<Boolean> {
     return new Promise<Boolean>((resolve, reject) => {
       this.fetchToken(r).then(res => {
         let tokenInfo = res.data;
         // 存储到本地
         tokenClient.setTokenInfo({
-          tokenType: tokenInfo.token_type,
-          expiresIn: tokenInfo.expires_in,
-          scope: tokenInfo.scope
+          token: tokenInfo.token,
+          expiresAt: tokenInfo.expires_at,
         }).then(resolve).catch(reject)
       }).catch(reject)
     })
   }
   // 基础方法
   async request(req: Axios.AxiosRequestConfig): Promise<any> {
-    return this.axios(req)
+    return new Promise<any>((resolved, reject) => {
+      this.axios(req).then(resolved).catch(e => {
+        if (e.response) {
+          if (e.response.status) {
+            reject(UnauthorizedError)
+          }
+        } else if (e.request) {
+          reject(NotFoundError)
+        } else {
+          reject(e)
+        }
+      })
+    })
   }
   async authRequest(req: Axios.AxiosRequestConfig): Promise<any> {
-    return tokenClient.getTokenInfo().then((token: any) => {
-      if (token && token.accessToken) {
-        req.headers = {
-          "Authorization": "Bearer " + token.accessToken
-        }
-        return this.axios(req)
-        // 认证失败没有指定的错误码, 所以不能判断认证失败的情况, 所以不能在认证失败后跳转
+    return tokenClient.getTokenInfo().then((token: TokenInfo) => {
+      req.headers = {
+        "Authorization": token.token
       }
+      return this.request(req)
+    }).catch(e => {
       return new Promise<any>((resolve, reject) => {
-        reject(goAuthorizePage)
+        reject(UnauthorizedError)
       })
     })
   }
@@ -105,13 +104,12 @@ export const client = new HTTPClient({ baseURL: baseURL })
 // ----------------------- 结构体定义 --------------------------
 
 export interface FetchTokenRequest {
-  userID?: string
+  cipher: string
 }
 export interface FetchTokenResponse {
   data: {
-    token_type: TokenType
-    expires_in: number
-    scope: string
+    token: string
+    expires_at: number
   }
 }
 
