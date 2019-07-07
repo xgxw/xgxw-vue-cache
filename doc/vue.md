@@ -20,3 +20,6 @@ deep selector, 在 scope 作用域中影响子组建. scss 只能使用 `::v-dee
 vue3 ts 修饰词用法参考:
 https://github.com/vuejs/vue-class-component/blob/master/README.md
 https://github.com/kaorun343/vue-property-decorator
+
+
+对于 vuex, 在页面内通过 vue-router.push 等方法跳转是可以保留数据的, 但是通过直接进入路由的方式, 会重置store状态, 相当与必须在单页模式下才行, 输入url进入不是SPA.

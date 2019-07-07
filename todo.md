@@ -1,6 +1,5 @@
-1. article页完善
-2. 添加 tool/editor 页, 只有编辑功能, 保存逻辑为保存到本地/或localstorage
-3. loading组件, 通知组件, 弹层输入组件(密码).
+1. 完善 tools/editor 页面, 在 store/article 添加本地保存功能, tools/editor save是调用之, 保存在本地
+2. loading组件, 通知组件, 弹层输入组件(密码).
 
 功能
 1. loading组件, 通知组件, 弹层输入组件(密码).
