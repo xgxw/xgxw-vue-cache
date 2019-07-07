@@ -9,8 +9,6 @@ import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import { MobileWidth } from "@/constants/constants";
 import { mapGetters, mapActions } from "vuex";
-import { fileID } from "../router";
-import { UnauthorizedError } from "../constants/error";
 
 @Component({
   components: {
@@ -23,9 +21,9 @@ import { UnauthorizedError } from "../constants/error";
   },
   methods: {
     ...mapActions({
-      fetchContent: "article/fetchContent",
+      fetchContent: "article/fetchContentLocal",
       changeContent: "article/changeContent",
-      uploadContent: "article/uploadContent"
+      uploadContent: "article/uploadContentLocal"
     })
   }
 })
@@ -37,24 +35,13 @@ export default class Editor extends Vue {
     return false;
   }
   mounted() {
-    // TODO: 添加定时任务, 每1分钟自动执行一次uploadContent
-    let fid = this.$route.params[fileID];
-    this.fetchContent(fid).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-    });
+    this.fetchContent("tools_editor");
   }
   change(data: string) {
-    this.changeContent(data).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-    });
+    this.changeContent(data);
   }
   save(data: string) {
-    this.uploadContent(data).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-      if (e == UnauthorizedError) {
-        // then 弹出输入密码浮层
-      }
-    });
+    this.uploadContent(data);
   }
 }
 </script>
@@ -62,5 +49,4 @@ export default class Editor extends Vue {
 <style lang="scss" scoped>
 @import "@/assets/css/base.scss";
 @import "@/assets/css/editor.scss";
-
 </style>

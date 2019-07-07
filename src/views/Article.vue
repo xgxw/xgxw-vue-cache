@@ -10,7 +10,8 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Markdown.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import { fileID } from "../router";
 
 @Component({
   components: {
@@ -20,10 +21,20 @@ import { mapGetters } from "vuex";
     ...mapGetters({
       content: "article/getContent"
     })
+  },
+  methods: {
+    ...mapActions({
+      fetchContent: "article/fetchContent"
+    })
   }
 })
 export default class Home extends Vue {
-  mounted() {}
+  mounted() {
+    let fid = this.$route.params[fileID];
+    this.fetchContent(fid).catch(e => {
+      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+    });
+  }
 }
 </script>
 <style lang='scss' scoped>

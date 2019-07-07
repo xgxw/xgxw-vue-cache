@@ -4,6 +4,7 @@ import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
 import Article from '@/views/Article.vue';
 import Editor from '@/views/Editor.vue';
+import { tools } from './tools/index';
 
 Vue.use(Router);
 
@@ -55,6 +56,7 @@ const router = new Router({
     login,
     article,
     editor,
+    ...tools,
     {
       path: '*',
       redirect: '/',
