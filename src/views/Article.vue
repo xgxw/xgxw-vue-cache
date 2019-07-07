@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Loading :spinning="isLoading" />
     <div class="drawing-board"></div>
     <article class="article">
       <Markdown :mkdoc="content" />
@@ -10,12 +11,14 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Markdown.vue";
+import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
 import { fileID } from "../router";
 
 @Component({
   components: {
-    Markdown
+    Markdown,
+    Loading
   },
   computed: {
     ...mapGetters({
@@ -28,12 +31,17 @@ import { fileID } from "../router";
     })
   }
 })
-export default class Home extends Vue {
+export default class Article extends Vue {
+  private isLoading: boolean = true;
   mounted() {
     let fid = this.$route.params[fileID];
-    this.fetchContent(fid).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-    });
+    this.fetchContent(fid)
+      .catch(e => {
+        console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }
 </script>

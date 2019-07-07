@@ -1,0 +1,5 @@
+@media all {
+  .v-note-wrapper::v-deep {
+    z-index:10 !important;
+  }
+}
