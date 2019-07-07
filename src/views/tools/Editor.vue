@@ -21,7 +21,9 @@ import { mapGetters, mapActions } from "vuex";
   },
   methods: {
     ...mapActions({
-      changeContent: "article/changeContent"
+      fetchContent: "article/fetchContentLocal",
+      changeContent: "article/changeContent",
+      uploadContent: "article/uploadContentLocal"
     })
   }
 })
@@ -32,14 +34,14 @@ export default class Editor extends Vue {
     }
     return false;
   }
-  mounted() {}
+  mounted() {
+    this.fetchContent("tools_editor");
+  }
   change(data: string) {
-    this.changeContent(data).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-    });
+    this.changeContent(data);
   }
   save(data: string) {
-    this.change(data);
+    this.uploadContent(data);
   }
 }
 </script>
@@ -47,5 +49,4 @@ export default class Editor extends Vue {
 <style lang="scss" scoped>
 @import "@/assets/css/base.scss";
 @import "@/assets/css/editor.scss";
-
 </style>

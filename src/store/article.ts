@@ -36,6 +36,11 @@ const getters = {
   }
 }
 
+// 从本地根据fid获取数据时, 添加key修饰关键字
+function getLocalFileID(fid: string): string {
+  return 'article_local_' + fid;
+}
+
 const actions = {
   // fetchContent 初次进入时下载文件. 传入文件名称.
   async fetchContent({ commit }, fid: string): Promise<any> {
@@ -58,6 +63,24 @@ const actions = {
       }).finally(() => {
         commit("fetchingContentFinish", article)
       })
+    })
+  },
+  // fetchContentLocal 初次进入时下载文件. 传入文件名称.
+  async fetchContentLocal({ commit }, fid: string): Promise<any> {
+    let _fid: string = getLocalFileID(fid)
+    commit("fetchingContent", fid)
+    return new Promise<any>((resolved, reject) => {
+      let article: Article = defaultArticle;
+      let articleStr = window.localStorage.getItem(_fid);
+      if (articleStr) {
+        article = JSON.parse(<string>articleStr);
+        if (!article || article.fid != fid) {
+          // 当解析错误或解析出空数据时, 重置为默认的数据
+          article = defaultArticle
+        }
+      }
+      resolved()
+      commit("fetchingContentFinish", article)
     })
   },
   // changeContent 更改vuex Content 内容. Editor.vue change事件触发
@@ -91,7 +114,17 @@ const actions = {
         commit("uploadContentFinish")
       })
     })
-  }
+  },
+  // uploadContentLocal 初次进入时下载文件. 传入文件名称.
+  async uploadContentLocal({ commit, state }, content: string): Promise<any> {
+    commit("uploadContent", content)
+    return new Promise<any>((resolved, reject) => {
+      let localFid = getLocalFileID(state.data.fid);
+      window.localStorage.setItem(localFid, JSON.stringify(state.data))
+      resolved()
+      commit("uploadContentFinish")
+    })
+  },
 }
 
 const mutations = {
