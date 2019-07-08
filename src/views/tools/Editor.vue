@@ -32,21 +32,32 @@ import { mapGetters, mapActions } from "vuex";
 })
 export default class Editor extends Vue {
   private isLoading: boolean = true;
+  private autoSaveTimer:any;
+  private autoSaveDuration: number = 60*1000;
+  autosave(){
+    this.save(this.content)
+  }
+  resetAutoSaveTimer(){
+    window.clearInterval(this.autoSaveTimer)
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
+  }
+  mounted() {
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
+    this.fetchContent("tools_editor").finally(() => {
+      this.isLoading = false;
+    });
+  }
   get isMobile() {
     if (document.body.clientWidth < MobileWidth) {
       return true;
     }
     return false;
   }
-  mounted() {
-    this.fetchContent("tools_editor").finally(() => {
-      this.isLoading = false;
-    });
-  }
   change(data: string) {
     this.changeContent(data);
   }
   save(data: string) {
+    this.resetAutoSaveTimer()
     const hide = this.$message.loading("save to localStorage..", 0);
     this.uploadContent(data).finally(() => {
       setTimeout(hide, 0);

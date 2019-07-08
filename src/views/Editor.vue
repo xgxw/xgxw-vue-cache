@@ -34,13 +34,17 @@ import { UnauthorizedError } from "../constants/error";
 })
 export default class Editor extends Vue {
   private isLoading: boolean = true;
-  get isMobile() {
-    if (document.body.clientWidth < MobileWidth) {
-      return true;
-    }
-    return false;
+  private autoSaveTimer:any;
+  private autoSaveDuration: number = 60*1000;
+  autosave(){
+    this.save(this.content)
+  }
+  resetAutoSaveTimer(){
+    window.clearInterval(this.autoSaveTimer)
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
   }
   mounted() {
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
     // TODO: 添加定时任务, 每1分钟自动执行一次uploadContent
     let fid = this.$route.params[fileID];
     this.fetchContent(fid)
@@ -51,12 +55,19 @@ export default class Editor extends Vue {
         this.isLoading = false;
       });
   }
+  get isMobile() {
+    if (document.body.clientWidth < MobileWidth) {
+      return true;
+    }
+    return false;
+  }
   change(data: string) {
     this.changeContent(data).catch(e => {
       console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
     });
   }
   save(data: string) {
+    this.resetAutoSaveTimer()
     const hide = this.$message.loading("uploading..", 0);
     this.uploadContent(data)
       .catch(e => {
