@@ -37,7 +37,7 @@ export default class Article extends Vue {
     let fid = this.$route.params[fileID];
     this.fetchContent(fid)
       .catch(e => {
-        console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
       })
       .finally(() => {
         this.isLoading = false;

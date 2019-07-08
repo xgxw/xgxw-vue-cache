@@ -1,6 +1,11 @@
 <template>
   <div class="container">
     <Loading :spinning="isLoading" />
+    <PasswdModal
+      :visible="isNeedPasswd"
+      v-on:handleOk="handleAfterAuth"
+      v-on:handleCancel="handleAfterAuthFalse"
+    />
     <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -9,6 +14,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
+import PasswdModal from "./components/PasswdModal.vue";
 import { MobileWidth } from "@/constants/constants";
 import { mapGetters, mapActions } from "vuex";
 import { fileID } from "../router";
@@ -17,7 +23,8 @@ import { UnauthorizedError } from "../constants/error";
 @Component({
   components: {
     EditorComponent,
-    Loading
+    Loading,
+    PasswdModal
   },
   computed: {
     ...mapGetters({
@@ -33,23 +40,24 @@ import { UnauthorizedError } from "../constants/error";
   }
 })
 export default class Editor extends Vue {
+  private isNeedPasswd: boolean = false;
   private isLoading: boolean = true;
-  private autoSaveTimer:any;
-  private autoSaveDuration: number = 60*1000;
-  autosave(){
-    this.save(this.content)
+  private autoSaveTimer: any;
+  private autoSaveDuration: number = 60 * 1000;
+  autosave() {
+    this.save(this.content);
   }
-  resetAutoSaveTimer(){
-    window.clearInterval(this.autoSaveTimer)
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
+  resetAutoSaveTimer() {
+    window.clearInterval(this.autoSaveTimer);
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
   }
   mounted() {
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
     // TODO: 添加定时任务, 每1分钟自动执行一次uploadContent
     let fid = this.$route.params[fileID];
     this.fetchContent(fid)
       .catch(e => {
-        console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
+        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
       })
       .finally(() => {
         this.isLoading = false;
@@ -62,24 +70,32 @@ export default class Editor extends Vue {
     return false;
   }
   change(data: string) {
-    this.changeContent(data).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-    });
+    this.changeContent(data);
   }
   save(data: string) {
-    this.resetAutoSaveTimer()
-    const hide = this.$message.loading("uploading..", 0);
+    this.resetAutoSaveTimer();
+    const hide: TimerHandler = this.$message.loading("uploading..", 0);
     this.uploadContent(data)
+      .then(res => {
+        this.$message.info("uploading finished", 2);
+      })
       .catch(e => {
-        console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
         if (e == UnauthorizedError) {
-          // then 弹出输入密码浮层
+          this.isNeedPasswd = true;
+          return;
         }
+        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
       })
       .finally(() => {
         setTimeout(hide, 0);
-        this.$message.info("uploading finished", 2);
       });
+  }
+  handleAfterAuth() {
+    this.isNeedPasswd = false;
+    this.save(this.content);
+  }
+  handleAfterAuthFalse() {
+    this.isNeedPasswd = false;
   }
 }
 </script>

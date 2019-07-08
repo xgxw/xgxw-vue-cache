@@ -32,17 +32,17 @@ import { mapGetters, mapActions } from "vuex";
 })
 export default class Editor extends Vue {
   private isLoading: boolean = true;
-  private autoSaveTimer:any;
-  private autoSaveDuration: number = 60*1000;
-  autosave(){
-    this.save(this.content)
+  private autoSaveTimer: any;
+  private autoSaveDuration: number = 60 * 1000;
+  autosave() {
+    this.save(this.content);
   }
-  resetAutoSaveTimer(){
-    window.clearInterval(this.autoSaveTimer)
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
+  resetAutoSaveTimer() {
+    window.clearInterval(this.autoSaveTimer);
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
   }
   mounted() {
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration)
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
     this.fetchContent("tools_editor").finally(() => {
       this.isLoading = false;
     });
@@ -57,12 +57,21 @@ export default class Editor extends Vue {
     this.changeContent(data);
   }
   save(data: string) {
-    this.resetAutoSaveTimer()
-    const hide = this.$message.loading("save to localStorage..", 0);
-    this.uploadContent(data).finally(() => {
-      setTimeout(hide, 0);
-      this.$message.info("save finished", 2);
-    });
+    this.resetAutoSaveTimer();
+    const hide: TimerHandler = this.$message.loading(
+      "save to localStorage..",
+      0
+    );
+    this.uploadContent(data)
+      .then(res => {
+        this.$message.info("save finished", 2);
+      })
+      .catch(e => {
+        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+      })
+      .finally(() => {
+        setTimeout(hide, 0);
+      });
   }
 }
 </script>
