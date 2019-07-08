@@ -34,7 +34,7 @@ export class TokenClient {
                     reject("json parse fail")
                 }
                 let tokenInfo = JSON.parse(<string>str)
-                if (tokenInfo && tokenInfo.accessToken) {
+                if (tokenInfo && tokenInfo.token) {
                     return resolve(tokenInfo)
                 }
                 reject("json parse fail")

@@ -8,7 +8,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$message = message;
 message.config({
-  // top: `0px`,
+  maxCount: 2
 });
 
 new Vue({
