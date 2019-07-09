@@ -19,6 +19,7 @@ import { MobileWidth } from "@/constants/constants";
 import { getFidFromPath, redirectToLogin } from "@/constants/guard";
 import { mapGetters, mapActions } from "vuex";
 import { UnauthorizedError, NotFoundError } from "../constants/error";
+import { client as tokenClient } from "@/api/token";
 
 @Component({
   components: {
@@ -42,26 +43,28 @@ import { UnauthorizedError, NotFoundError } from "../constants/error";
 export default class Editor extends Vue {
   private isNeedPasswd: boolean = false;
   private isLoading: boolean = true;
-  // hasLoadFile 影响自动保存策略. 当不输入密码时, 取消自动保存. 当未正确加载文件时, 也取消自动保存
-  private hasLoadFile: boolean = false;
+  // isAutoSaveFile 影响自动保存策略. 只有当文件加载成功, 并且本地有token时, 才会启用自动保存
+  private isAutoSaveFile: boolean = false;
   private autoSaveTimer: any;
   private autoSaveDuration: number = 60 * 1000;
   autosave() {
     this.save(this.content);
   }
   resetAutoSaveTimer() {
-    this.clearAutoSaveTimer();
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
-  }
-  clearAutoSaveTimer() {
     window.clearInterval(this.autoSaveTimer);
+    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
   }
   mounted() {
     let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
       .then(res => {
-        this.hasLoadFile = true;
-        this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
+        tokenClient.hasTokenInfo().then(res => {
+          this.isAutoSaveFile = true;
+          this.autoSaveTimer = setInterval(
+            this.autosave,
+            this.autoSaveDuration
+          );
+        });
       })
       .catch(e => {
         if (e == NotFoundError) {
@@ -69,7 +72,7 @@ export default class Editor extends Vue {
           return;
         }
         this.$message.warning("服务器跑路了, 请稍候再试..", 2);
-        this.hasLoadFile = false;
+        this.isAutoSaveFile = false;
       })
       .finally(() => {
         this.isLoading = false;
@@ -85,7 +88,7 @@ export default class Editor extends Vue {
     this.changeContent(data);
   }
   save(data: string) {
-    if (this.hasLoadFile) {
+    if (this.isAutoSaveFile) {
       this.resetAutoSaveTimer();
     }
     const hide: TimerHandler = this.$message.loading("uploading..", 0);
@@ -106,12 +109,12 @@ export default class Editor extends Vue {
   }
   handleAfterAuth() {
     this.isNeedPasswd = false;
+    this.isAutoSaveFile = true;
     this.save(this.content);
   }
   handleAfterAuthFalse() {
     this.isNeedPasswd = false;
-    this.hasLoadFile = false;
-    this.clearAutoSaveTimer();
+    this.isAutoSaveFile = false;
   }
 }
 </script>
