@@ -42,42 +42,37 @@ import { UnauthorizedError, NotFoundError } from "../constants/error";
 export default class Editor extends Vue {
   private isNeedPasswd: boolean = false;
   private isLoading: boolean = true;
-  private isLoadFile: boolean = false;
+  // hasLoadFile 影响自动保存策略. 当不输入密码时, 取消自动保存. 当未正确加载文件时, 也取消自动保存
+  private hasLoadFile: boolean = false;
   private autoSaveTimer: any;
   private autoSaveDuration: number = 60 * 1000;
   autosave() {
     this.save(this.content);
   }
   resetAutoSaveTimer() {
-    window.clearInterval(this.autoSaveTimer);
+    this.clearAutoSaveTimer();
     this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
   }
+  clearAutoSaveTimer() {
+    window.clearInterval(this.autoSaveTimer);
+  }
   mounted() {
-    redirectToLogin(this.$router)
+    let fid = getFidFromPath(this.$route);
+    this.fetchContent(fid)
       .then(res => {
-        let fid = getFidFromPath(this.$route);
-        this.fetchContent(fid)
-          .then(res => {
-            this.isLoadFile = true;
-            this.autoSaveTimer = setInterval(
-              this.autosave,
-              this.autoSaveDuration
-            );
-          })
-          .catch(e => {
-            if (e == NotFoundError) {
-              this.$message.warning("页面不存在..", 2);
-              return;
-            }
-            this.$message.warning("服务器跑路了, 请稍候再试..", 2);
-            this.isLoadFile = false;
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+        this.hasLoadFile = true;
+        this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
       })
       .catch(e => {
-        this.$message.info("需要登录", 2);
+        if (e == NotFoundError) {
+          this.$message.warning("页面不存在..", 2);
+          return;
+        }
+        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+        this.hasLoadFile = false;
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
   get isMobile() {
@@ -90,11 +85,9 @@ export default class Editor extends Vue {
     this.changeContent(data);
   }
   save(data: string) {
-    if (!this.isLoadFile) {
-      this.$message.warning("没有找到文件, 无法保存.", 2);
-      return;
+    if (this.hasLoadFile) {
+      this.resetAutoSaveTimer();
     }
-    this.resetAutoSaveTimer();
     const hide: TimerHandler = this.$message.loading("uploading..", 0);
     this.uploadContent(data)
       .then(res => {
@@ -105,7 +98,7 @@ export default class Editor extends Vue {
           this.isNeedPasswd = true;
           return;
         }
-        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+        this.$message.warning("服务器跑路了, 无法更新文件..", 2);
       })
       .finally(() => {
         setTimeout(hide, 0);
@@ -117,6 +110,8 @@ export default class Editor extends Vue {
   }
   handleAfterAuthFalse() {
     this.isNeedPasswd = false;
+    this.hasLoadFile = false;
+    this.clearAutoSaveTimer();
   }
 }
 </script>
