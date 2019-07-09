@@ -23,3 +23,14 @@ https://github.com/kaorun343/vue-property-decorator
 
 
 对于 vuex, 在页面内通过 vue-router.push 等方法跳转是可以保留数据的, 但是通过直接进入路由的方式, 会重置store状态, 相当与必须在单页模式下才行, 输入url进入不是SPA.
+
+
+```Typescript
+// 如下是错误的一种示范, tokenClient.hasTokenInfo() 返回一个 promise, redirectToLogin 返回的是 hasTokenInfo() 是否执行, 而不论hasTokenInfo内是 resolved, 还是 reject
+// 具体参考 https://github.com/everywan/note/blob/master/front_end/js/promise.md
+function redirectToLogin(router: VueRouter): Promise<any> {
+  return tokenClient.hasTokenInfo().catch(e => {
+    router.push("/login")
+  })
+}
+```

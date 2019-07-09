@@ -1,5 +1,4 @@
 import * as Axios from 'axios'
-import router from '@/router'
 import { client as tokenClient, TokenInfo } from './token'
 import { UnauthorizedError, NotFoundError } from '@/constants/error';
 
@@ -31,13 +30,13 @@ export class HTTPClient {
   }
 
   async fetchFile(r: FetchFileRequset): Promise<FetchFileResponse> {
-    return this.request({
+    return this.requestAttachToken({
       url: 'v1/file/' + r.fid,
       method: "GET",
     })
   }
   async uploadFile(r: UploadFileRequset): Promise<UploadFileResponse> {
-    return this.authRequest({
+    return this.requestWithToken({
       url: 'v1/file/' + r.fid,
       method: "PUT",
       data: {
@@ -46,7 +45,7 @@ export class HTTPClient {
     })
   }
 
-  // Token相关
+  // ------------------------- Token相关 -------------------------------
   async fetchToken(r: FetchTokenRequest): Promise<FetchTokenResponse> {
     return this.request({
       url: "v1/auth/token",
@@ -69,13 +68,20 @@ export class HTTPClient {
       }).catch(reject)
     })
   }
-  // 基础方法
+
+  // -------------------------- 基础方法 -------------------------------
+  // 基础请求, 无需token
   async request(req: Axios.AxiosRequestConfig): Promise<any> {
     return new Promise<any>((resolved, reject) => {
       this.axios(req).then(resolved).catch(e => {
         if (e.response) {
-          if (e.response.status) {
-            reject(UnauthorizedError)
+          switch (e.response.status) {
+            case 403:
+              reject(UnauthorizedError)
+            case 404:
+              reject(NotFoundError)
+            default:
+              reject(e)
           }
         } else if (e.request) {
           reject(NotFoundError)
@@ -85,7 +91,8 @@ export class HTTPClient {
       })
     })
   }
-  async authRequest(req: Axios.AxiosRequestConfig): Promise<any> {
+  // 必须有token才可以
+  async requestWithToken(req: Axios.AxiosRequestConfig): Promise<any> {
     return tokenClient.getTokenInfo().then((token: TokenInfo) => {
       req.headers = {
         "Authorization": token.token
@@ -95,6 +102,17 @@ export class HTTPClient {
       return new Promise<any>((resolve, reject) => {
         reject(UnauthorizedError)
       })
+    })
+  }
+  // 当有 token 时带token, 没有时不带token的请求
+  async requestAttachToken(req: Axios.AxiosRequestConfig): Promise<any> {
+    return tokenClient.getTokenInfo().then((token: TokenInfo) => {
+      req.headers = {
+        "Authorization": token.token
+      }
+      return this.request(req)
+    }).catch(e => {
+      return this.request(req)
     })
   }
 }

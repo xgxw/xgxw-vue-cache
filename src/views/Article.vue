@@ -13,7 +13,8 @@ import { Component, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
-import { fileID } from "../router";
+import { NotFoundError } from '@/constants/error';
+import { getFidFromPath } from "@/constants/guard";
 
 @Component({
   components: {
@@ -34,9 +35,13 @@ import { fileID } from "../router";
 export default class Article extends Vue {
   private isLoading: boolean = true;
   mounted() {
-    let fid = this.$route.params[fileID];
+    let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
       .catch(e => {
+        if (e == NotFoundError) {
+          this.$message.warning("页面不存在..", 2);
+          return;
+        }
         this.$message.warning("服务器跑路了, 请稍候再试..", 2);
       })
       .finally(() => {

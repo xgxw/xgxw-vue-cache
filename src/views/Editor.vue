@@ -16,9 +16,9 @@ import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
 import PasswdModal from "./components/PasswdModal.vue";
 import { MobileWidth } from "@/constants/constants";
+import { getFidFromPath, redirectToLogin } from "@/constants/guard";
 import { mapGetters, mapActions } from "vuex";
-import { fileID } from "../router";
-import { UnauthorizedError } from "../constants/error";
+import { UnauthorizedError, NotFoundError } from "../constants/error";
 
 @Component({
   components: {
@@ -42,6 +42,7 @@ import { UnauthorizedError } from "../constants/error";
 export default class Editor extends Vue {
   private isNeedPasswd: boolean = false;
   private isLoading: boolean = true;
+  private isLoadFile: boolean = false;
   private autoSaveTimer: any;
   private autoSaveDuration: number = 60 * 1000;
   autosave() {
@@ -52,15 +53,31 @@ export default class Editor extends Vue {
     this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
   }
   mounted() {
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
-    // TODO: 添加定时任务, 每1分钟自动执行一次uploadContent
-    let fid = this.$route.params[fileID];
-    this.fetchContent(fid)
-      .catch(e => {
-        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+    redirectToLogin(this.$router)
+      .then(res => {
+        let fid = getFidFromPath(this.$route);
+        this.fetchContent(fid)
+          .then(res => {
+            this.isLoadFile = true;
+            this.autoSaveTimer = setInterval(
+              this.autosave,
+              this.autoSaveDuration
+            );
+          })
+          .catch(e => {
+            if (e == NotFoundError) {
+              this.$message.warning("页面不存在..", 2);
+              return;
+            }
+            this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+            this.isLoadFile = false;
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
       })
-      .finally(() => {
-        this.isLoading = false;
+      .catch(e => {
+        this.$message.info("需要登录", 2);
       });
   }
   get isMobile() {
@@ -73,6 +90,10 @@ export default class Editor extends Vue {
     this.changeContent(data);
   }
   save(data: string) {
+    if (!this.isLoadFile) {
+      this.$message.warning("没有找到文件, 无法保存.", 2);
+      return;
+    }
     this.resetAutoSaveTimer();
     const hide: TimerHandler = this.$message.loading("uploading..", 0);
     this.uploadContent(data)
