@@ -1,4 +1,8 @@
-export const isMobile = function() {
-  const flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-  return flag;
+import { MobileWidth } from "@/constants/constants";
+
+export const isMobile = function () {
+  if (document.body.clientWidth < MobileWidth) {
+    return true;
+  }
+  return false;
 };

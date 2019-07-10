@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <Loading :spinning="isLoading" />
+    <Loading :spinning="fetching" />
     <PasswdModal
-      :visible="isNeedPasswd"
+      :visible="showPasswdModal"
       v-on:handleOk="handleAfterAuth"
       v-on:handleCancel="handleAfterAuthFalse"
     />
@@ -15,11 +15,12 @@ import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
 import PasswdModal from "./components/PasswdModal.vue";
-import { MobileWidth } from "@/constants/constants";
 import { getFidFromPath, redirectToLogin } from "@/constants/guard";
 import { mapGetters, mapActions } from "vuex";
 import { UnauthorizedError, NotFoundError } from "../constants/error";
 import { client as tokenClient } from "@/api/token";
+import { isMobile } from "@/util/util";
+import AutoSaveClient from "@/util/autosave";
 
 @Component({
   components: {
@@ -29,7 +30,9 @@ import { client as tokenClient } from "@/api/token";
   },
   computed: {
     ...mapGetters({
-      content: "article/getContent"
+      content: "article/getContent",
+      fetching: "article/isFetching",
+      isChanged: "article/isChangedSinceLastSave"
     })
   },
   methods: {
@@ -41,55 +44,45 @@ import { client as tokenClient } from "@/api/token";
   }
 })
 export default class Editor extends Vue {
-  private isNeedPasswd: boolean = false;
-  private isLoading: boolean = true;
-  // isAutoSaveFile 影响自动保存策略. 只有当文件加载成功, 并且本地有token时, 才会启用自动保存
-  private isAutoSaveFile: boolean = false;
-  private autoSaveTimer: any;
-  private autoSaveDuration: number = 60 * 1000;
-  autosave() {
+  // PasswdModal 相关
+  private showPasswdModal: boolean = false;
+  handleAfterAuth() {
+    this.showPasswdModal = false;
     this.save(this.content);
+    this.startAutoSave();
   }
-  resetAutoSaveTimer() {
-    window.clearInterval(this.autoSaveTimer);
-    this.autoSaveTimer = setInterval(this.autosave, this.autoSaveDuration);
+  handleAfterAuthFalse() {
+    this.showPasswdModal = false;
   }
+
+  // 启动启动保存. 只有当文件加载成功, 并且本地有token时, 才会启用自动保存
+  startAutoSave() {
+    tokenClient.hasTokenInfo().then(res => {
+      let _this = this;
+      let client = new AutoSaveClient(function() {
+        _this.save(_this.content);
+      });
+      client.start();
+    });
+  }
+
   mounted() {
     let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
       .then(res => {
-        tokenClient.hasTokenInfo().then(res => {
-          this.isAutoSaveFile = true;
-          this.autoSaveTimer = setInterval(
-            this.autosave,
-            this.autoSaveDuration
-          );
-        });
+        this.startAutoSave();
       })
       .catch(e => {
-        if (e == NotFoundError) {
-          this.$message.warning("页面不存在..", 2);
-          return;
-        }
-        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
-        this.isAutoSaveFile = false;
-      })
-      .finally(() => {
-        this.isLoading = false;
+          // TODO 调起文章不存在的处理Modal
       });
-  }
-  get isMobile() {
-    if (document.body.clientWidth < MobileWidth) {
-      return true;
-    }
-    return false;
   }
   change(data: string) {
     this.changeContent(data);
   }
   save(data: string) {
-    if (this.isAutoSaveFile) {
-      this.resetAutoSaveTimer();
+    // 如果文件从上次save后没有更改过, 那么跳过执行save
+    if (this.isChanged == false) {
+      return;
     }
     const hide: TimerHandler = this.$message.loading("uploading..", 0);
     this.uploadContent(data)
@@ -98,23 +91,14 @@ export default class Editor extends Vue {
       })
       .catch(e => {
         if (e == UnauthorizedError) {
-          this.isNeedPasswd = true;
+          this.showPasswdModal = true;
           return;
         }
-        this.$message.warning("服务器跑路了, 无法更新文件..", 2);
+        this.$message.warning("服务器跑路了, 更新文件失败..", 2);
       })
       .finally(() => {
         setTimeout(hide, 0);
       });
-  }
-  handleAfterAuth() {
-    this.isNeedPasswd = false;
-    this.isAutoSaveFile = true;
-    this.save(this.content);
-  }
-  handleAfterAuthFalse() {
-    this.isNeedPasswd = false;
-    this.isAutoSaveFile = false;
   }
 }
 </script>

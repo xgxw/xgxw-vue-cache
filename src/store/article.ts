@@ -10,6 +10,7 @@ export interface Article {
 interface State {
   fetching: boolean,
   uploading: boolean,
+  changedSinceLastSave: boolean,
   data: Article,
 };
 
@@ -21,6 +22,7 @@ const defaultArticle: Article = {
 const state: State = {
   fetching: true,
   uploading: true,
+  changedSinceLastSave: true,
   data: defaultArticle,
 }
 
@@ -30,6 +32,9 @@ const getters = {
   },
   isUploading: (state: State): boolean => {
     return state.uploading
+  },
+  isChangedSinceLastSave: (state: State): boolean => {
+    return state.changedSinceLastSave
   },
   getContent: (state: State): string => {
     return state.data.content
@@ -135,11 +140,13 @@ const mutations = {
   },
   fetchingContentFinish(state: State, article: Article) {
     state.fetching = false
+    state.changedSinceLastSave = false;
     state.data = article
     console.log("fetchingContentFinish: ", article)
   },
   changeContent(state: State, content: string) {
     state.data.content = content
+    state.changedSinceLastSave = true;
     console.log("changeContent: ", content)
   },
   uploadContent(state: State, content: string) {
@@ -149,6 +156,7 @@ const mutations = {
   },
   uploadContentFinish(state: State) {
     state.uploading = false
+    state.changedSinceLastSave = false;
     console.log("uploadContentFinish.")
   }
 }
