@@ -6,6 +6,7 @@
       v-on:handleOk="handleAfterAuth"
       v-on:handleCancel="handleAfterAuthFalse"
     />
+    <RedirectModal :visible="redirectNewUrl" />
     <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -15,7 +16,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
 import PasswdModal from "./components/PasswdModal.vue";
-import { getFidFromPath, redirectToLogin } from "@/constants/guard";
+import RedirectModal from "./components/RedirectModal.vue";
+import { getFidFromPath } from "@/constants/guard";
 import { mapGetters, mapActions } from "vuex";
 import { UnauthorizedError, NotFoundError } from "../constants/error";
 import { client as tokenClient } from "@/api/token";
@@ -26,7 +28,8 @@ import AutoSaveClient from "@/util/autosave";
   components: {
     EditorComponent,
     Loading,
-    PasswdModal
+    PasswdModal,
+    RedirectModal
   },
   computed: {
     ...mapGetters({
@@ -56,16 +59,19 @@ export default class Editor extends Vue {
   }
 
   // 启动启动保存. 只有当文件加载成功, 并且本地有token时, 才会启用自动保存
+  private autoSaveclient!: AutoSaveClient;
   startAutoSave() {
     tokenClient.hasTokenInfo().then(res => {
       let _this = this;
-      let client = new AutoSaveClient(function() {
+      this.autoSaveclient = new AutoSaveClient(function() {
         _this.save(_this.content);
       });
-      client.start();
+      this.autoSaveclient.start();
     });
   }
 
+  private isMobile = isMobile();
+  private redirectNewUrl: boolean = false;
   mounted() {
     let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
@@ -73,8 +79,13 @@ export default class Editor extends Vue {
         this.startAutoSave();
       })
       .catch(e => {
-          // TODO 调起文章不存在的处理Modal
+        this.redirectNewUrl = true;
       });
+  }
+  destroyed() {
+    if (this.autoSaveclient) {
+      this.autoSaveclient.stop();
+    }
   }
   change(data: string) {
     this.changeContent(data);
