@@ -1,13 +1,13 @@
 <template>
-  <Modal title="卫兵, 这里有人" :visible="visible" @ok="handleOk" @cancel="handleCancel">
-    <Input
+  <a-modal title="卫兵, 这里有人" :visible="visible" @ok="handleOk" @cancel="handleCancel">
+    <a-input
       id="passwd-input"
       :auto-focus="autoFocus"
       v-model="passwd"
       @pressEnter="inputEnter"
       placeholder="你需要输入密码, 快说口令"
     />
-  </Modal>
+  </a-modal>
 </template>
 
 <script lang="ts">
@@ -19,8 +19,8 @@ const defaultInputCount: number = 3;
 
 @Component({
   components: {
-    Input,
-    Modal
+    "a-input": Input,
+    "a-modal": Modal
   }
 })
 export default class PasswdModal extends Vue {

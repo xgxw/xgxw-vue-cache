@@ -1,5 +1,5 @@
 <template>
-  <Modal
+  <a-modal
     title="文章不存在, 你可能想.."
     :visible="visible"
     okText="请求新页面"
@@ -7,19 +7,18 @@
     @ok="handleOk"
     @cancel="handleCancel"
   >
-    <Input :auto-focus="autoFocus" @pressEnter="inputEnter" v-model="newPath" />
-  </Modal>
+    <a-input :auto-focus="autoFocus" @pressEnter="inputEnter" v-model="newPath" />
+  </a-modal>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Modal, Input, Button } from "ant-design-vue";
+import { Modal, Input } from "ant-design-vue";
 
 @Component({
   components: {
-    Input,
-    Modal,
-    Button
+    "a-input": Input,
+    "a-modal": Modal
   }
 })
 export default class RedirectModal extends Vue {

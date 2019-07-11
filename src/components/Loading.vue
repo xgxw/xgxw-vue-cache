@@ -1,6 +1,6 @@
 <template>
   <div v-show="spinning" class="container">
-    <Spin :spinning="spinning" />
+    <a-spin :spinning="spinning" />
   </div>
 </template>
 
@@ -10,7 +10,7 @@ import { Spin } from "ant-design-vue";
 
 @Component({
   components: {
-    Spin
+    "a-spin": Spin
   }
 })
 export default class Loading extends Vue {
