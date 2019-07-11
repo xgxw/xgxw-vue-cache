@@ -13,7 +13,7 @@ import { Component, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
-import { NotFoundError } from '@/constants/error';
+import { NotFoundError } from "@/constants/error";
 import { getFidFromPath } from "@/constants/guard";
 
 @Component({
@@ -74,7 +74,8 @@ export default class Article extends Vue {
 // PC端界面
 @media screen and (min-width: $mobile-width) {
   .article {
-    margin: 0 auto;
+    min-height: 95vh;
+    margin: 1vh auto;
     padding: 30px;
     width: 65%;
   }
@@ -85,6 +86,7 @@ export default class Article extends Vue {
   .article {
     margin: 0 auto;
     padding: 30px;
+    min-height: 100vh;
   }
 }
 </style>

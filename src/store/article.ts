@@ -147,7 +147,6 @@ const mutations = {
   changeContent(state: State, content: string) {
     state.data.content = content
     state.changedSinceLastSave = true;
-    console.log("changeContent: ", content)
   },
   uploadContent(state: State, content: string) {
     state.uploading = true
