@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
     <Loading :spinning="fetching" />
     <PasswdModal
       :visible="showPasswdModal"
@@ -7,6 +7,7 @@
       v-on:handleCancel="handleAfterAuthFalse"
     />
     <RedirectModal :visible="redirectNewUrl" />
+    <CatalogMenu />
     <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -23,9 +24,11 @@ import { UnauthorizedError, NotFoundError } from "../constants/error";
 import { client as tokenClient } from "@/api/token";
 import { isMobile } from "@/util/util";
 import AutoSaveClient from "@/util/autosave";
+import CatalogMenu from "./components/CatalogMenu.vue";
 
 @Component({
   components: {
+    CatalogMenu,
     EditorComponent,
     Loading,
     PasswdModal,
@@ -33,6 +36,7 @@ import AutoSaveClient from "@/util/autosave";
   },
   computed: {
     ...mapGetters({
+      menuExpand: "menu/isExpand",
       content: "article/getContent",
       fetching: "article/isFetching",
       isChanged: "article/isChangedSinceLastSave"
@@ -115,6 +119,5 @@ export default class Editor extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/css/base.scss";
 @import "@/assets/css/editor.scss";
 </style>

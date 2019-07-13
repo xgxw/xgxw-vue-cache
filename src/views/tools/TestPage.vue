@@ -1,22 +1,16 @@
 <template>
-  <div class="container">
-    <RouteMenu />
-  </div>
+  <div class="container"></div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import RouteMenu from "../components/RouteMenu.vue";
 
 @Component({
-  components: {
-    RouteMenu
-  }
+  components: {}
 })
 export default class TestPage extends Vue {
   // private InputSearch = Input.Search;
   mounted() {}
-  onSearch() {}
 }
 </script>
 <style lang='scss' scoped>

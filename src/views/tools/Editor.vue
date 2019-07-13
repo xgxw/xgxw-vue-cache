@@ -1,6 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
     <Loading :spinning="fetching" />
+    <CatalogMenu />
     <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -13,15 +14,18 @@ import { mapGetters, mapActions } from "vuex";
 import { isMobile } from "@/util/util";
 import AutoSaveClient from "@/util/autosave";
 import RedirectModal from "../components/RedirectModal.vue";
+import CatalogMenu from "../components/CatalogMenu.vue";
 
 @Component({
   components: {
     EditorComponent,
     Loading,
-    RedirectModal
+    RedirectModal,
+    CatalogMenu
   },
   computed: {
     ...mapGetters({
+      menuExpand: "menu/isExpand",
       content: "article/getContent",
       fetching: "article/isFetching",
       isChanged: "article/isChangedSinceLastSave"
@@ -84,6 +88,5 @@ export default class Editor extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/css/base.scss";
 @import "@/assets/css/editor.scss";
 </style>
