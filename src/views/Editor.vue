@@ -7,7 +7,7 @@
       v-on:handleCancel="handleAfterAuthFalse"
     />
     <RedirectModal :visible="redirectNewUrl" />
-    <CatalogMenu />
+    <CatalogMenu v-if="!isMobile" />
     <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -74,7 +74,7 @@ export default class Editor extends Vue {
     });
   }
 
-  private isMobile = isMobile();
+  private isMobile: boolean = isMobile();
   private redirectNewUrl: boolean = false;
   mounted() {
     let fid = getFidFromPath(this.$route);

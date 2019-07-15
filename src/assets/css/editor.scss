@@ -3,7 +3,7 @@
 
 @media all {
   .v-note-wrapper::v-deep {
-    min-height: 90vh !important;
+    min-height: 100% !important;
   }
 }
 
@@ -11,6 +11,7 @@
 @media screen and (min-width: $mobile-width) {
   .container {
     padding: 20px 10px;
+    height: 100vh;
   }
   .menu-expand{
     margin-left: $menu-width;
@@ -21,5 +22,6 @@
 @media screen and (max-width: $mobile-width) {
   .container {
     padding: 0px;
+    height: 100vh;
   }
 }

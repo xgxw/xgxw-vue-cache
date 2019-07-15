@@ -6,6 +6,7 @@
       :subfield="subfield"
       :toolbarsFlag="showToolBar"
       :boxShadow="boxShadow"
+      :fontSize="fontSize"
     />
   </div>
 </template>
@@ -13,7 +14,7 @@
 <script lang='ts'>
 import { Component, Prop, Vue } from "vue-property-decorator";
 import mavonEditor from "mavon-editor";
-import { Mode } from "@/constants/mavon-editor";
+import { Mode, DefaultFontSize } from "@/constants/mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
 @Component({
@@ -27,6 +28,9 @@ export default class Markdown extends Vue {
   private subfield: boolean = false;
   private showToolBar: boolean = false;
   private boxShadow: boolean = false;
+  get fontSize() {
+    return DefaultFontSize;
+  }
 }
 </script>
 

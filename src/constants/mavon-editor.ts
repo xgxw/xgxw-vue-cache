@@ -4,6 +4,8 @@ export enum Mode {
   edit = "edit",
 }
 
+export const DefaultFontSize = "1.1em"
+
 const toolbars = {
   bold: true, // 粗体
   italic: true, // 斜体
