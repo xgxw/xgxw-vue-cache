@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Loading :spinning="isLoading" />
     <div class="drawing-board"></div>
     <article class="article">
       <Markdown :mkdoc="content" />
@@ -10,12 +11,15 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Markdown.vue";
+import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
-import { fileID } from "../router";
+import { NotFoundError } from "@/constants/error";
+import { getFidFromPath } from "@/constants/guard";
 
 @Component({
   components: {
-    Markdown
+    Markdown,
+    Loading
   },
   computed: {
     ...mapGetters({
@@ -28,12 +32,21 @@ import { fileID } from "../router";
     })
   }
 })
-export default class Home extends Vue {
+export default class Article extends Vue {
+  private isLoading: boolean = true;
   mounted() {
-    let fid = this.$route.params[fileID];
-    this.fetchContent(fid).catch(e => {
-      console.log("此处需要弹层通知错误, 添加 msg 组件后替换", e);
-    });
+    let fid = getFidFromPath(this.$route);
+    this.fetchContent(fid)
+      .catch(e => {
+        if (e == NotFoundError) {
+          this.$message.warning("页面不存在..", 2);
+          return;
+        }
+        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }
 </script>
@@ -61,7 +74,8 @@ export default class Home extends Vue {
 // PC端界面
 @media screen and (min-width: $mobile-width) {
   .article {
-    margin: 0 auto;
+    min-height: 95vh;
+    margin: 1vh auto;
     padding: 30px;
     width: 65%;
   }
@@ -72,6 +86,7 @@ export default class Home extends Vue {
   .article {
     margin: 0 auto;
     padding: 30px;
+    min-height: 100vh;
   }
 }
 </style>

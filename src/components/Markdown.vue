@@ -30,11 +30,13 @@ export default class Markdown extends Vue {
 }
 </script>
 
-<style scoped>
-.markdown >>> .v-note-panel {
+<style lang='scss'  scoped>
+@import "@/assets/css/mavon-editor.scss";
+
+.markdown::v-deep .v-note-panel {
   border-width: 0px !important;
 }
-.markdown >>> .v-show-content {
+.markdown::v-deep .v-show-content {
   padding: 0 !important;
   background: none !important;
 }

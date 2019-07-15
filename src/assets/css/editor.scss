@@ -1,3 +1,6 @@
+@import './base.scss';
+@import './mavon-editor.scss';
+
 @media all {
   .v-note-wrapper::v-deep {
     min-height: 90vh !important;
@@ -7,7 +10,10 @@
 // PC端界面
 @media screen and (min-width: $mobile-width) {
   .container {
-    padding: 20px;
+    padding: 20px 10px;
+  }
+  .menu-expand{
+    margin-left: $menu-width;
   }
 }
 

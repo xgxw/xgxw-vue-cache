@@ -31,7 +31,8 @@ export default class Editor extends Vue {
     return !this.isMobile;
   }
   get showToolbar() {
-    return this.isMobile;
+    return true;
+    // return this.isMobile;
   }
   get toolbars() {
     if (this.isMobile) {
