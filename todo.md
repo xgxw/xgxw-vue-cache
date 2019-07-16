@@ -10,6 +10,9 @@ feature
 
 后期完善
 1. ArticleNotFoundModal 中的 Input 可以添加自动联想
+2. 检查整体样式
+   1. import 导入, 公共部分全部使用 `@`
+   2. 引入其他组件改为 连字符+小写 模式, 而非驼峰命名
 
 
 附加
