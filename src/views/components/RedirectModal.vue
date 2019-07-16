@@ -14,6 +14,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Modal, Input } from "ant-design-vue";
+import { getIndexPath } from '@/router';
 
 @Component({
   components: {
@@ -32,7 +33,7 @@ export default class RedirectModal extends Vue {
     window.location.href = this.newPath;
   }
   handleCancel() {
-    window.location.href = document.location.origin + "/home";
+    window.location.href = document.location.origin + getIndexPath();
   }
   mounted() {
     this.newPath = window.location.href;

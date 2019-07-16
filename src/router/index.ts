@@ -8,6 +8,9 @@ import { tools } from './tools/index';
 
 Vue.use(Router);
 
+export function getIndexPath() {
+  return "/";
+}
 const index: RouteConfig = {
   path: '/',
   name: 'home',
@@ -18,6 +21,9 @@ const index: RouteConfig = {
 };
 
 export const loginRoutePath = "/login";
+export function getLoginPath() {
+  return loginRoutePath;
+}
 const login: RouteConfig = {
   path: loginRoutePath,
   name: 'login',
@@ -28,6 +34,9 @@ const login: RouteConfig = {
 };
 
 const articlePath: string = '/article/';
+export function getArticlePath(fid: string) {
+  return articlePath + fid;
+}
 const article: RouteConfig = {
   path: articlePath + "*",
   name: 'article',
@@ -38,6 +47,9 @@ const article: RouteConfig = {
 };
 
 const editorPath: string = '/editor/';
+export function getEditorPath(fid: string) {
+  return editorPath + fid;
+}
 const editor: RouteConfig = {
   path: editorPath + "*",
   name: 'editor',

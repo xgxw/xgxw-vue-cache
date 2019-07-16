@@ -1,5 +1,6 @@
 import VueRouter, { Route } from 'vue-router';
 import { client as tokenClient } from '@/api/token'
+import { getLoginPath } from '@/router';
 
 export function getFidFromPath(route: Route): string {
   return route.params.pathMatch;
@@ -10,7 +11,7 @@ export function redirectToLogin(router: VueRouter): Promise<any> {
     tokenClient.hasTokenInfo().then(res => {
       resolved()
     }).catch(e => {
-      router.push("/login")
+      router.push(getLoginPath())
       reject()
     })
   })

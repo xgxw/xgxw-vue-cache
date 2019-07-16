@@ -24,6 +24,7 @@ import { mapGetters, mapActions } from "vuex";
 import { NotFoundError } from "@/constants/error";
 import { getFidFromPath } from "@/constants/guard";
 import { isMobile } from "@/util/util";
+import { getEditorPath } from "@/router";
 
 const articleDomID: string = "article";
 
@@ -67,7 +68,7 @@ export default class Article extends Vue {
   }
   editor() {
     console.log("editor");
-    this.$router.push("/editor/" + getFidFromPath(this.$route));
+    this.$router.push(getEditorPath(getFidFromPath(this.$route)));
     this.hideContextMenu();
   }
 
