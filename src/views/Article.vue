@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <Loading :spinning="isLoading" />
-    <div class="drawing-board"></div>
     <article class="article">
       <Markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
@@ -55,17 +54,11 @@ export default class Article extends Vue {
 <style lang='scss' scoped>
 @import "@/assets/css/base.scss";
 
-.drawing-board {
-  z-index: -1;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  overflow-y: auto;
-  color: $black;
+.container {
   background-color: $backgroud-color;
+  overflow:hidden;
 }
+
 @media all {
   .article {
     box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
@@ -77,8 +70,8 @@ export default class Article extends Vue {
 @media screen and (min-width: $mobile-width) {
   .article {
     min-height: 95vh;
-    margin: 1vh auto;
-    padding: 30px;
+    margin: 5vh auto 5vh auto;
+    padding: 0.5rem 2.5rem 1rem 2.5rem;
     width: 65%;
   }
 }
@@ -87,7 +80,7 @@ export default class Article extends Vue {
 @media screen and (max-width: $mobile-width) {
   .article {
     margin: 0 auto;
-    padding: 30px;
+    padding: 0.5rem 2rem 1rem 2rem;
     min-height: 100vh;
   }
 }
