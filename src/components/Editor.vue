@@ -14,7 +14,7 @@
 <script lang="ts">
 import { Component, Prop, PropSync, Vue } from "vue-property-decorator";
 import mavonEditor from "mavon-editor";
-import { Mode, ToolbarsStyle, DefaultFontSize } from "@/constants/mavon-editor";
+import { Mode, ToolbarsStyle, FontSize } from "@/constants/mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
 @Component({
@@ -42,7 +42,10 @@ export default class Editor extends Vue {
     return ToolbarsStyle.default;
   }
   get fontSize() {
-    return DefaultFontSize;
+    if (this.isMobile) {
+      return FontSize.mobile;
+    }
+    return FontSize.default;
   }
 }
 </script>

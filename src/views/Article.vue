@@ -3,7 +3,7 @@
     <Loading :spinning="isLoading" />
     <div class="drawing-board"></div>
     <article class="article">
-      <Markdown :mkdoc="content" />
+      <Markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
   </div>
 </template>
@@ -15,6 +15,7 @@ import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
 import { NotFoundError } from "@/constants/error";
 import { getFidFromPath } from "@/constants/guard";
+import { isMobile } from "@/util/util";
 
 @Component({
   components: {
@@ -33,6 +34,7 @@ import { getFidFromPath } from "@/constants/guard";
   }
 })
 export default class Article extends Vue {
+  private isMobile = isMobile();
   private isLoading: boolean = true;
   mounted() {
     let fid = getFidFromPath(this.$route);

@@ -14,7 +14,7 @@
 <script lang='ts'>
 import { Component, Prop, Vue } from "vue-property-decorator";
 import mavonEditor from "mavon-editor";
-import { Mode, DefaultFontSize } from "@/constants/mavon-editor";
+import { Mode, FontSize } from "@/constants/mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
 @Component({
@@ -23,13 +23,17 @@ import "mavon-editor/dist/css/index.css";
   }
 })
 export default class Markdown extends Vue {
+  @Prop() private isMobile!: boolean;
   @Prop() private mkdoc!: string;
   private mode: string = Mode.preview;
   private subfield: boolean = false;
   private showToolBar: boolean = false;
   private boxShadow: boolean = false;
   get fontSize() {
-    return DefaultFontSize;
+    if (this.isMobile) {
+      return FontSize.mobile;
+    }
+    return FontSize.default;
   }
 }
 </script>
