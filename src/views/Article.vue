@@ -93,11 +93,12 @@ export default class Article extends Vue {
 </script>
 <style lang='scss' scoped>
 @import "@/assets/css/base.scss";
-@import url("https://unpkg.com/gutenberg-css@0.4") print;
+// @import url("https://unpkg.com/gutenberg-css@0.4") print;
 
 .container {
   background-color: $backgroud-color;
   overflow: hidden;
+  -webkit-print-color-adjust: exact;
 }
 
 @media all {
