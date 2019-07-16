@@ -7,6 +7,7 @@
       :toolbarsFlag="showToolBar"
       :boxShadow="boxShadow"
       :fontSize="fontSize"
+      @change="change"
     />
   </div>
 </template>
@@ -34,6 +35,10 @@ export default class Markdown extends Vue {
       return FontSize.mobile;
     }
     return FontSize.default;
+  }
+  change(value: String, render: String) {
+    // 用于通知上层 markdown 渲染后的 htmlCode
+    this.$emit("change", render);
   }
 }
 </script>

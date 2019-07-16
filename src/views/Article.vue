@@ -1,9 +1,17 @@
 <template>
   <div class="container">
     <Loading :spinning="isLoading" />
-    <article class="article">
+    <article id="article" class="article">
       <Markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
+    <context-menu
+      :target="contextMenuTarget"
+      :show="contextMenuVisible"
+      @update:show="(show) => contextMenuVisible = show"
+    >
+      <a @click="print">打印文章</a>
+      <a @click="editor">编辑文章</a>
+    </context-menu>
   </div>
 </template>
 
@@ -11,15 +19,19 @@
 import { Component, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
+import ContextMenu from "@/components/ContextMenu.vue";
 import { mapGetters, mapActions } from "vuex";
 import { NotFoundError } from "@/constants/error";
 import { getFidFromPath } from "@/constants/guard";
 import { isMobile } from "@/util/util";
 
+const articleDomID: string = "article";
+
 @Component({
   components: {
     Markdown,
-    Loading
+    Loading,
+    "context-menu": ContextMenu
   },
   computed: {
     ...mapGetters({
@@ -35,6 +47,30 @@ import { isMobile } from "@/util/util";
 export default class Article extends Vue {
   private isMobile = isMobile();
   private isLoading: boolean = true;
+
+  // contextMenu 右键菜单选项
+  private contextMenuTarget: HTMLElement | null = null;
+  private contextMenuVisible: boolean = false;
+  initContextMenu() {
+    this.contextMenuTarget =
+      document.getElementById(articleDomID) || document.body;
+  }
+  hideContextMenu() {
+    this.contextMenuVisible = false;
+  }
+  print() {
+    console.log("print");
+    this.hideContextMenu();
+    this.$nextTick(() => {
+      window.print();
+    });
+  }
+  editor() {
+    console.log("editor");
+    this.$router.push("/editor/" + getFidFromPath(this.$route));
+    this.hideContextMenu();
+  }
+
   mounted() {
     let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
@@ -48,6 +84,9 @@ export default class Article extends Vue {
       .finally(() => {
         this.isLoading = false;
       });
+
+    // 其他初始化函数
+    this.initContextMenu();
   }
 }
 </script>
@@ -56,7 +95,7 @@ export default class Article extends Vue {
 
 .container {
   background-color: $backgroud-color;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 @media all {
