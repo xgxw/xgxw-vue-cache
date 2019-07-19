@@ -1,8 +1,8 @@
 <template>
   <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
-    <Loading :spinning="fetching" />
-    <CatalogMenu />
-    <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
+    <loading :spinning="fetching" />
+    <catalog-menu v-if="!isMobile" />
+    <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
 
@@ -13,22 +13,19 @@ import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
 import { isMobile } from "@/util/util";
 import AutoSaveClient from "@/util/autosave";
-import RedirectModal from "../components/RedirectModal.vue";
 import CatalogMenu from "../components/CatalogMenu.vue";
 
 @Component({
   components: {
-    EditorComponent,
-    Loading,
-    RedirectModal,
-    CatalogMenu
+    "catalog-menu": CatalogMenu,
+    "editor-component": EditorComponent,
+    loading: Loading
   },
   computed: {
     ...mapGetters({
       menuExpand: "menu/isExpand",
       content: "article/getContent",
-      fetching: "article/isFetching",
-      isChanged: "article/isChangedSinceLastSave"
+      fetching: "article/isFetching"
     })
   },
   methods: {
@@ -40,35 +37,14 @@ import CatalogMenu from "../components/CatalogMenu.vue";
   }
 })
 export default class Editor extends Vue {
-  // 启动启动保存. 只有当文件加载成功时, 才会启用自动保存
-  private autoSaveclient!: AutoSaveClient;
-  startAutoSave() {
-    let _this = this;
-    this.autoSaveclient = new AutoSaveClient(function() {
-      _this.save(_this.content);
-    });
-    this.autoSaveclient.start();
-  }
-
   private isMobile = isMobile();
   mounted() {
-    this.fetchContent("tools_editor").then(res => {
-      this.startAutoSave();
-    });
-  }
-  destroyed() {
-    if (this.autoSaveclient) {
-      this.autoSaveclient.stop();
-    }
+    this.fetchContent("tools_editor");
   }
   change(data: string) {
     this.changeContent(data);
   }
   save(data: string) {
-    // 如果文件从上次save后没有更改过, 那么跳过执行save
-    if (this.isChanged == false) {
-      return;
-    }
     const hide: TimerHandler = this.$message.loading(
       "save to localStorage..",
       0
@@ -78,7 +54,7 @@ export default class Editor extends Vue {
         this.$message.info("save finished", 2);
       })
       .catch(e => {
-        this.$message.warning("服务器跑路了, 更新文件失败..", 2);
+        this.$message.warning("更新文章失败.", 2);
       })
       .finally(() => {
         setTimeout(hide, 0);

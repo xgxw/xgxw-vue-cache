@@ -1,9 +1,10 @@
 <template>
   <div class="container">
     <header class="print-header">www.xiagaoxiawan.com</header>
-    <Loading :spinning="isLoading" />
+    <loading :spinning="isLoading" />
+    <catalog-menu v-if="!isMobile" />
     <article id="article" class="article">
-      <Markdown :mkdoc="content" :isMobile="isMobile" />
+      <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
     <context-menu
       :target="contextMenuTarget"
@@ -31,14 +32,16 @@ import {
 import { getFidFromPath } from "@/constants/guard";
 import { isMobile } from "@/util/util";
 import { getEditorPath } from "@/router";
+import CatalogMenu from "./components/CatalogMenu.vue";
 
 const articleDomID: string = "article";
 
 @Component({
   components: {
-    Markdown,
-    Loading,
-    "context-menu": ContextMenu
+    "catalog-menu": CatalogMenu,
+    markdown: Markdown,
+    loading: Loading,
+    "context-menu": ContextMenu,
   },
   computed: {
     ...mapGetters({

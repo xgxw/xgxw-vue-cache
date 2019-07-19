@@ -1,8 +1,8 @@
 <template>
   <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
-    <Loading :spinning="fetching" />
-    <CatalogMenu v-if="!isMobile" />
-    <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
+    <loading :spinning="fetching" />
+    <catalog-menu v-if="!isMobile" />
+    <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
 
@@ -18,21 +18,19 @@ import {
   InvalidTokenError
 } from "../constants/error";
 import { isMobile } from "@/util/util";
-import AutoSaveClient from "@/util/autosave";
 import CatalogMenu from "./components/CatalogMenu.vue";
-import { client as tokenClient } from "../api/token";
 
 @Component({
   components: {
-    CatalogMenu,
-    EditorComponent,
-    Loading
+    "catalog-menu": CatalogMenu,
+    "editor-component": EditorComponent,
+    loading: Loading
   },
   computed: {
     ...mapGetters({
       menuExpand: "menu/isExpand",
       content: "article/getContent",
-      fetching: "article/isFetching",
+      fetching: "article/isFetching"
     })
   },
   methods: {

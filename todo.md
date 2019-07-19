@@ -5,17 +5,12 @@ feature
 
 悬浮添加 回到顶部等功能
 尝试将密码输入组件放到 App.vue 组件, 全局启用
-Article 添加Modal, 用于显示markdown源码/htmlCode源码
 
 其他代办
 1. Login页面完善
 
 后期完善
-1. ArticleNotFoundModal 中的 Input 可以添加自动联想
-2. 检查整体样式
-   1. import 导入, 公共部分全部使用 `@`
-   2. 引入其他组件改为 连字符+小写 模式, 而非驼峰命名
-3. token 续期的问题
+1. token 续期的问题
 
 
 附加
@@ -25,7 +20,6 @@ Article 添加Modal, 用于显示markdown源码/htmlCode源码
 2. 也可以考虑 shell 样式, 很好玩
 
 
-认证逻辑修改
-1. 所有 `*/public/*` 路由的网页无需认证, 其他的均需要认证(仅对于浏览/编辑文章而言)
-2. 在 mounted 时, 若发现未授权错误, 则跳转到Login页面, 登录成功后跳转回来. 若发现其他错误, 则按404处理, 跳转到首页. 
-3. 对于 editor 页面, 如果在 save 时发现 未授权 错误, 则提示错误, 但是不做任何操作.
+添加 热键区域, 如点击左上角则弹出 catelogMenu
+添加 help 页, 负责教程指导
+添加 快捷启动shell, 使用 弹层Modal+input+提示 的方式, 不同页面使用不同的提示词
