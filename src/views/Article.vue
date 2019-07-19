@@ -12,6 +12,7 @@
       <a @click="print">打印文章</a>
       <a @click="editor">编辑文章</a>
     </context-menu>
+    <footer class="print-footer">www.xiagaoxiawan.com</footer>
   </div>
 </template>
 
@@ -21,7 +22,11 @@ import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
 import ContextMenu from "@/components/ContextMenu.vue";
 import { mapGetters, mapActions } from "vuex";
-import { NotFoundError } from "@/constants/error";
+import {
+  UnauthorizedError,
+  NotFoundError,
+  InvalidTokenError
+} from "../constants/error";
 import { getFidFromPath } from "@/constants/guard";
 import { isMobile } from "@/util/util";
 import { getEditorPath } from "@/router";
@@ -76,11 +81,19 @@ export default class Article extends Vue {
     let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
       .catch(e => {
-        if (e == NotFoundError) {
-          this.$message.warning("页面不存在..", 2);
-          return;
+        switch (e) {
+          case NotFoundError:
+            this.$message.warning("页面不存在..", 2);
+            return;
+          case UnauthorizedError:
+            this.$message.warning("需要认证..", 2);
+            return;
+          case InvalidTokenError:
+            this.$message.warning("登录已过期, 需要重新授权.", 2);
+            return;
+          default:
+            this.$message.warning("服务器跑路了, 请稍候再试..", 2);
         }
-        this.$message.warning("服务器跑路了, 请稍候再试..", 2);
       })
       .finally(() => {
         this.isLoading = false;
@@ -124,6 +137,23 @@ export default class Article extends Vue {
     margin: 0 auto;
     padding: 0.5rem 2rem 1rem 2rem;
     min-height: 100vh;
+  }
+}
+
+@media screen {
+  .print-footer {
+    display: none;
+  }
+}
+
+@media print {
+  @page {
+    size: auto;
+    margin: 1.2cm auto 0 auto;
+  }
+  .print-footer {
+    position: absolute;
+    bottom: 0;
   }
 }
 </style>

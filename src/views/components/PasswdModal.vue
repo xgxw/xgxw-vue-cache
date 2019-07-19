@@ -24,7 +24,7 @@ const defaultInputCount: number = 3;
   }
 })
 export default class PasswdModal extends Vue {
-  @Prop() private visible: boolean = false;
+  @Prop() private visible!: boolean;
   private passwd: string = "";
   private autoFocus: boolean = true;
   private inputCount: number = defaultInputCount;

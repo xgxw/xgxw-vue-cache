@@ -83,6 +83,10 @@ export default class Editor extends Vue {
         this.startAutoSave();
       })
       .catch(e => {
+        if (e == UnauthorizedError) {
+          this.showPasswdModal = true;
+          return;
+        }
         this.redirectNewUrl = true;
       });
   }

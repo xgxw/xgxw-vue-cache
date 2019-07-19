@@ -1,6 +1,6 @@
 import * as Axios from 'axios'
 import { client as tokenClient, TokenInfo } from './token'
-import { UnauthorizedError, NotFoundError } from '@/constants/error';
+import { UnauthorizedError, NotFoundError, InvalidTokenError } from '@/constants/error';
 
 const baseURL = process.env.VUE_APP_BASE_URL
 
@@ -77,16 +77,20 @@ export class HTTPClient {
         if (e.response) {
           switch (e.response.status) {
             case 403:
-              reject(UnauthorizedError)
+              return tokenClient.getTokenInfo().then(res => {
+                reject(InvalidTokenError)
+              }).catch(e => {
+                reject(UnauthorizedError)
+              })
             case 404:
-              reject(NotFoundError)
+              return reject(NotFoundError)
             default:
-              reject(e)
+                return reject(e)
           }
         } else if (e.request) {
-          reject(NotFoundError)
+          return reject(NotFoundError)
         } else {
-          reject(e)
+          return reject(e)
         }
       })
     })
