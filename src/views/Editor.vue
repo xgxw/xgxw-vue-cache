@@ -1,12 +1,6 @@
 <template>
   <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
     <Loading :spinning="fetching" />
-    <PasswdModal
-      :visible="showPasswdModal"
-      v-on:handleOk="handleAfterAuth"
-      v-on:handleCancel="handleAfterAuthFalse"
-    />
-    <RedirectModal :visible="redirectNewUrl" />
     <CatalogMenu v-if="!isMobile" />
     <EditorComponent :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
@@ -16,30 +10,29 @@
 import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
-import PasswdModal from "./components/PasswdModal.vue";
-import RedirectModal from "./components/RedirectModal.vue";
 import { getFidFromPath } from "@/constants/guard";
 import { mapGetters, mapActions } from "vuex";
-import { UnauthorizedError, NotFoundError } from "../constants/error";
-import { client as tokenClient } from "@/api/token";
+import {
+  UnauthorizedError,
+  NotFoundError,
+  InvalidTokenError
+} from "../constants/error";
 import { isMobile } from "@/util/util";
 import AutoSaveClient from "@/util/autosave";
 import CatalogMenu from "./components/CatalogMenu.vue";
+import { client as tokenClient } from "../api/token";
 
 @Component({
   components: {
     CatalogMenu,
     EditorComponent,
-    Loading,
-    PasswdModal,
-    RedirectModal
+    Loading
   },
   computed: {
     ...mapGetters({
       menuExpand: "menu/isExpand",
       content: "article/getContent",
       fetching: "article/isFetching",
-      isChanged: "article/isChangedSinceLastSave"
     })
   },
   methods: {
@@ -51,69 +44,42 @@ import CatalogMenu from "./components/CatalogMenu.vue";
   }
 })
 export default class Editor extends Vue {
-  // PasswdModal 相关
-  private showPasswdModal: boolean = false;
-  handleAfterAuth() {
-    this.showPasswdModal = false;
-    this.save(this.content);
-    this.startAutoSave();
-  }
-  handleAfterAuthFalse() {
-    this.showPasswdModal = false;
-  }
-
-  // 启动启动保存. 只有当文件加载成功, 并且本地有token时, 才会启用自动保存
-  private autoSaveclient!: AutoSaveClient;
-  startAutoSave() {
-    tokenClient.hasTokenInfo().then(res => {
-      let _this = this;
-      this.autoSaveclient = new AutoSaveClient(function() {
-        _this.save(_this.content);
-      });
-      this.autoSaveclient.start();
-    });
-  }
-
   private isMobile: boolean = isMobile();
-  private redirectNewUrl: boolean = false;
   mounted() {
     let fid = getFidFromPath(this.$route);
-    this.fetchContent(fid)
-      .then(res => {
-        this.startAutoSave();
-      })
-      .catch(e => {
-        if (e == UnauthorizedError) {
-          this.showPasswdModal = true;
+    this.fetchContent(fid).catch(e => {
+      switch (e) {
+        case UnauthorizedError:
+          this.$message.warning("需要授权", 2);
           return;
-        }
-        this.redirectNewUrl = true;
-      });
-  }
-  destroyed() {
-    if (this.autoSaveclient) {
-      this.autoSaveclient.stop();
-    }
+        case InvalidTokenError:
+          this.$message.warning("认证过期", 2);
+          return;
+        default:
+          this.$message.warning("未找到文章", 2);
+      }
+    });
   }
   change(data: string) {
     this.changeContent(data);
   }
   save(data: string) {
-    // 如果文件从上次save后没有更改过, 那么跳过执行save
-    if (this.isChanged == false) {
-      return;
-    }
     const hide: TimerHandler = this.$message.loading("uploading..", 0);
     this.uploadContent(data)
       .then(res => {
         this.$message.info("uploading finished", 2);
       })
       .catch(e => {
-        if (e == UnauthorizedError) {
-          this.showPasswdModal = true;
-          return;
+        switch (e) {
+          case UnauthorizedError:
+            this.$message.warning("更新文章失败: 需要授权", 2);
+            return;
+          case InvalidTokenError:
+            this.$message.warning("更新文章失败: 认证过期", 2);
+            return;
+          default:
+            this.$message.warning("更新文章失败.", 2);
         }
-        this.$message.warning("服务器跑路了, 更新文件失败..", 2);
       })
       .finally(() => {
         setTimeout(hide, 0);

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <header class="print-header">www.xiagaoxiawan.com</header>
     <Loading :spinning="isLoading" />
     <article id="article" class="article">
       <Markdown :mkdoc="content" :isMobile="isMobile" />
@@ -12,7 +13,7 @@
       <a @click="print">打印文章</a>
       <a @click="editor">编辑文章</a>
     </context-menu>
-    <footer class="print-footer">www.xiagaoxiawan.com</footer>
+    <footer class="print-footer">keep it simple stupid</footer>
   </div>
 </template>
 
@@ -82,17 +83,14 @@ export default class Article extends Vue {
     this.fetchContent(fid)
       .catch(e => {
         switch (e) {
-          case NotFoundError:
-            this.$message.warning("页面不存在..", 2);
-            return;
           case UnauthorizedError:
-            this.$message.warning("需要认证..", 2);
+            this.$message.warning("需要授权", 2);
             return;
           case InvalidTokenError:
-            this.$message.warning("登录已过期, 需要重新授权.", 2);
+            this.$message.warning("认证过期", 2);
             return;
           default:
-            this.$message.warning("服务器跑路了, 请稍候再试..", 2);
+            this.$message.warning("未找到文章", 2);
         }
       })
       .finally(() => {
@@ -126,7 +124,7 @@ export default class Article extends Vue {
   .article {
     min-height: 95vh;
     margin: 5vh auto 5vh auto;
-    padding: 0.5rem 2.5rem 1rem 2.5rem;
+    padding: 2rem 3rem;
     width: 65%;
   }
 }
@@ -135,12 +133,15 @@ export default class Article extends Vue {
 @media screen and (max-width: $mobile-width) {
   .article {
     margin: 0 auto;
-    padding: 0.5rem 2rem 1rem 2rem;
+    padding: 1.5rem 2rem;
     min-height: 100vh;
   }
 }
 
 @media screen {
+  .print-header {
+    display: none;
+  }
   .print-footer {
     display: none;
   }
@@ -150,6 +151,10 @@ export default class Article extends Vue {
   @page {
     size: auto;
     margin: 1.2cm auto 0 auto;
+  }
+  .print-header {
+    position: absolute;
+    top: 2cm;
   }
   .print-footer {
     position: absolute;
