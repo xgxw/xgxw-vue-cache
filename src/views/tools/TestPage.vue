@@ -8,14 +8,10 @@
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Affix,Button } from "ant-design-vue";
 import Markdown from "@/components/Markdown.vue";
 
 @Component({
-  components: {
-    "a-affix": Affix,
-    "a-button": Button
-  }
+  components: {}
 })
 export default class TestPage extends Vue {
   private top: number = 10;

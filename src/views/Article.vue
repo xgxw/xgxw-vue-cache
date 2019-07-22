@@ -1,11 +1,12 @@
 <template>
   <div class="container">
     <header class="print-header">www.xiagaoxiawan.com</header>
-    <loading :spinning="isLoading" />
-    <catalog-menu v-if="!isMobile" />
     <article id="article" class="article">
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
+    <footer class="print-footer">keep it simple stupid</footer>
+    <loading :spinning="isLoading" />
+    <catalog-menu v-if="isMobile" />
     <context-menu
       :target="contextMenuTarget"
       :show="contextMenuVisible"
@@ -14,7 +15,6 @@
       <a @click="print">打印文章</a>
       <a @click="editor">编辑文章</a>
     </context-menu>
-    <footer class="print-footer">keep it simple stupid</footer>
   </div>
 </template>
 
@@ -41,7 +41,7 @@ const articleDomID: string = "article";
     "catalog-menu": CatalogMenu,
     markdown: Markdown,
     loading: Loading,
-    "context-menu": ContextMenu,
+    "context-menu": ContextMenu
   },
   computed: {
     ...mapGetters({
@@ -103,32 +103,41 @@ export default class Article extends Vue {
     // 其他初始化函数
     this.initContextMenu();
   }
+  onKeyDown() {
+    document.onkeydown = function(e) {
+      if (e.keyCode == 32 && e.altKey) {
+        console.log(e);
+      }
+    };
+  }
 }
 </script>
 <style lang='scss' scoped>
 @import "@/assets/css/base.scss";
-// @import url("https://unpkg.com/gutenberg-css@0.4") print;
 
 .container {
-  background-color: $backgroud-color;
+  background-color: $backgroud-color-read;
   overflow: hidden;
   -webkit-print-color-adjust: exact;
 }
 
-@media all {
-  .article {
-    box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
-    background-color: #fff;
-  }
+.article {
+  box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+}
+.article::v-deep .markdown-body {
+  color: $color-read !important;
+}
+.article::v-deep .v-note-wrapper {
+  background-color: $backgroud-color-read !important;
 }
 
 // PC端界面
 @media screen and (min-width: $mobile-width) {
   .article {
     min-height: 95vh;
-    margin: 5vh auto 5vh auto;
+    margin: 3vh auto;
     padding: 2rem 3rem;
-    width: 65%;
+    width: 55%;
   }
 }
 
