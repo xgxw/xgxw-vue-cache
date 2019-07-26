@@ -3,5 +3,3 @@ export interface SelectItem {
   desc: string;
   cmd: () => void;
 }
-
-export const allDataSet: SelectItem[] = []
