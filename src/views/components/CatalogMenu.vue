@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="visible">
     <a-menu v-show="expand" @click="handleClick" mode="inline" class="menu">
       <a-sub-menu key="article" @titleClick="titleClick">
         <span slot="title">
@@ -42,6 +42,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { client } from "@/api/index";
 import { Menu, Icon } from "ant-design-vue";
 import { mapGetters, mapActions } from "vuex";
+import { SelectItem } from "../../constants/command";
 
 @Component({
   components: {
@@ -63,13 +64,35 @@ import { mapGetters, mapActions } from "vuex";
   }
 })
 export default class CatalogMenu extends Vue {
-  mounted() {}
+  private visible: boolean = false;
   handleClick(data: any) {
     console.log("handleClick: ", data);
   }
   titleClick(data: any) {
     console.log("titleClick: ", data);
   }
+
+  // CommandBar
+  showCatalogMenu() {
+    this.visible = true;
+  }
+  hideCatalogMenu() {
+    this.visible = false;
+  }
+  private CommandBarData: SelectItem[] = [
+    {
+      name: "show-catalog-menu",
+      desc: "显示菜单",
+      cmd: this.showCatalogMenu.bind(this)
+    },
+    {
+      name: "hide-catalog-menu",
+      desc: "隐藏菜单",
+      cmd: this.hideCatalogMenu.bind(this)
+    }
+  ];
+
+  mounted() {}
 }
 </script>
 

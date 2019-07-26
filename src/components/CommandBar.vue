@@ -25,16 +25,10 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Modal, AutoComplete, Select, Input, Icon } from "ant-design-vue";
 import { KeyCode } from "@/util/keycode";
-import Index from "../views/tools/Index.vue";
+import { SelectItem } from "@/constants/command";
 
 const SelectOptGroup = Select.OptGroup;
 const SelectOpt = Select.Option;
-
-interface SelectItem {
-  name: string;
-  desc: string;
-  cmd: () => void;
-}
 
 @Component({
   components: {
@@ -47,8 +41,10 @@ interface SelectItem {
   }
 })
 export default class CommandBar extends Vue {
-  private showDropDown: boolean = true;
+  @Prop() private dataset!: SelectItem[];
+
   // AutoComplete
+  private showDropDown: boolean = true;
   handleSearch(value: string) {
     this.dataSource = [];
     this.dataset.forEach(item => {
@@ -70,34 +66,6 @@ export default class CommandBar extends Vue {
   private command!: SelectItem;
   private false = false;
   private commandBar = "commandBar";
-
-  private dataset: SelectItem[] = [
-    {
-      name: "print",
-      cmd: () => {},
-      desc: "打印网页"
-    },
-    {
-      name: "print2",
-      cmd: () => {},
-      desc: "打印网页"
-    },
-    {
-      name: "2print",
-      cmd: () => {},
-      desc: "打印网页"
-    },
-    {
-      name: "3print",
-      cmd: () => {},
-      desc: "打印网页"
-    },
-    {
-      name: "4print",
-      cmd: () => {},
-      desc: "打印网页"
-    }
-  ];
   private dataSource: SelectItem[] = this.dataset;
 
   // Handle Show/Hide
@@ -139,9 +107,15 @@ export default class CommandBar extends Vue {
       }
     };
   }
+  getAllRouterUrl() {
+    let goto = (path: string) => {
+      this.$router.push(path);
+    };
+  }
 
   mounted() {
     this.onKeyDown();
+    this.getAllRouterUrl();
   }
 }
 </script>

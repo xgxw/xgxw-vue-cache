@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
     <loading :spinning="fetching" />
-    <catalog-menu v-if="!isMobile" />
+    <catalog-menu />
     <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>

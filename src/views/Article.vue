@@ -6,8 +6,8 @@
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
     <footer class="print-footer">keep it simple stupid</footer>
-    <catalog-menu v-if="!isMobile" />
-    <command-bar />
+    <catalog-menu v-if="catalogMenu" />
+    <command-bar :dataset="commandBarData" />
   </div>
 </template>
 
@@ -26,6 +26,7 @@ import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
 import CatalogMenu from "./components/CatalogMenu.vue";
 import CommandBar from "@/components/CommandBar.vue";
+import { SelectItem } from "../constants/command";
 
 const articleDomID: string = "article";
 
@@ -50,6 +51,7 @@ const articleDomID: string = "article";
 })
 export default class Article extends Vue {
   private isMobile = isMobile();
+  private catalogMenu: boolean = false;
 
   mounted() {
     let fid = getFidFromPath(this.$route);
@@ -69,7 +71,18 @@ export default class Article extends Vue {
       .finally(() => {});
   }
 
-  // 功能函数
+  private commandBarData: SelectItem[] = [
+    {
+      name: "print",
+      desc: "打印本页",
+      cmd: this.print.bind(this)
+    },
+    {
+      name: "editor",
+      desc: "编辑本页",
+      cmd: this.editor.bind(this)
+    }
+  ];
   print() {
     console.log("print");
     this.$nextTick(() => {
