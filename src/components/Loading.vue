@@ -19,11 +19,13 @@ export default class Loading extends Vue {
 }
 </script>
 <style lang='scss' scoped>
+@import "@/assets/css/zindex.scss";
+
 .container {
   position: absolute;
   height: 100%;
   width: 100%;
-  z-index: 11;
+  z-index: $loading;
   display: flex;
   flex-direction: column;
   justify-content: center;

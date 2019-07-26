@@ -1,20 +1,19 @@
 <template>
   <div class="container">
-    <a-affix :offsetBottom="this.top" :style="{ position: 'fixed', bottom: '10px', right: '20px'}">
-      <a-button type="primary" @click="()=>{this.top += 10}">Affix top</a-button>
-    </a-affix>
+    <shell />
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import Markdown from "@/components/Markdown.vue";
+import CommandBar from "@/components/CommandBar.vue";
 
 @Component({
-  components: {}
+  components: {
+    shell: CommandBar
+  }
 })
 export default class TestPage extends Vue {
-  private top: number = 10;
   mounted() {}
 }
 </script>

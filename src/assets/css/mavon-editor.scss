@@ -1,5 +1,7 @@
+@import './zindex.scss';
+
 @media all {
   .v-note-wrapper::v-deep {
-    z-index:10 !important;
+    z-index: $mavon-editor !important;
   }
 }

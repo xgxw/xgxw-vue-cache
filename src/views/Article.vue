@@ -1,28 +1,18 @@
 <template>
   <div class="container">
+    <loading :spinning="fetching" />
     <header class="print-header">www.xiagaoxiawan.com</header>
     <article id="article" class="article">
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
     <footer class="print-footer">keep it simple stupid</footer>
-    <loading :spinning="isLoading" />
-    <catalog-menu v-if="isMobile" />
-    <context-menu
-      :target="contextMenuTarget"
-      :show="contextMenuVisible"
-      @update:show="(show) => contextMenuVisible = show"
-    >
-      <a @click="print">打印文章</a>
-      <a @click="editor">编辑文章</a>
-    </context-menu>
+    <catalog-menu v-if="!isMobile" />
+    <command-bar />
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import Markdown from "@/components/Markdown.vue";
-import Loading from "@/components/Loading.vue";
-import ContextMenu from "@/components/ContextMenu.vue";
 import { mapGetters, mapActions } from "vuex";
 import {
   UnauthorizedError,
@@ -32,7 +22,10 @@ import {
 import { getFidFromPath } from "@/constants/guard";
 import { isMobile } from "@/util/util";
 import { getEditorPath } from "@/router";
+import Markdown from "@/components/Markdown.vue";
+import Loading from "@/components/Loading.vue";
 import CatalogMenu from "./components/CatalogMenu.vue";
+import CommandBar from "@/components/CommandBar.vue";
 
 const articleDomID: string = "article";
 
@@ -41,10 +34,11 @@ const articleDomID: string = "article";
     "catalog-menu": CatalogMenu,
     markdown: Markdown,
     loading: Loading,
-    "context-menu": ContextMenu
+    "command-bar": CommandBar
   },
   computed: {
     ...mapGetters({
+      fetching: "article/isFetching",
       content: "article/getContent"
     })
   },
@@ -56,30 +50,6 @@ const articleDomID: string = "article";
 })
 export default class Article extends Vue {
   private isMobile = isMobile();
-  private isLoading: boolean = true;
-
-  // contextMenu 右键菜单选项
-  private contextMenuTarget: HTMLElement | null = null;
-  private contextMenuVisible: boolean = false;
-  initContextMenu() {
-    this.contextMenuTarget =
-      document.getElementById(articleDomID) || document.body;
-  }
-  hideContextMenu() {
-    this.contextMenuVisible = false;
-  }
-  print() {
-    console.log("print");
-    this.hideContextMenu();
-    this.$nextTick(() => {
-      window.print();
-    });
-  }
-  editor() {
-    console.log("editor");
-    this.$router.push(getEditorPath(getFidFromPath(this.$route)));
-    this.hideContextMenu();
-  }
 
   mounted() {
     let fid = getFidFromPath(this.$route);
@@ -96,19 +66,19 @@ export default class Article extends Vue {
             this.$message.warning("未找到文章", 2);
         }
       })
-      .finally(() => {
-        this.isLoading = false;
-      });
-
-    // 其他初始化函数
-    this.initContextMenu();
+      .finally(() => {});
   }
-  onKeyDown() {
-    document.onkeydown = function(e) {
-      if (e.keyCode == 32 && e.altKey) {
-        console.log(e);
-      }
-    };
+
+  // 功能函数
+  print() {
+    console.log("print");
+    this.$nextTick(() => {
+      window.print();
+    });
+  }
+  editor() {
+    console.log("editor");
+    this.$router.push(getEditorPath(getFidFromPath(this.$route)));
   }
 }
 </script>

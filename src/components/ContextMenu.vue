@@ -95,6 +95,7 @@ export default class TestPage extends Vue {
 </script>
 <style lang='scss' scoped>
 @import "@/assets/css/base.scss";
+@import "@/assets/css/zindex.scss";
 
 .menu {
   position: fixed;
@@ -102,7 +103,7 @@ export default class TestPage extends Vue {
   border: 1px solid $backgroud-color;
   border-radius: 3px;
   box-shadow: 0 0.5rem 1rem 0 $backgroud-color;
-  z-index: 999;
+  z-index: $context-menu;
   display: block;
 
   a {
