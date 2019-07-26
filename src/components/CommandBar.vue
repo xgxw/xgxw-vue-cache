@@ -18,6 +18,7 @@
         <a-input :id="commandBar" />
       </a-auto-complete>
     </a-modal>
+    <catalog-menu v-if="catalogMenu" />
   </div>
 </template>
 
@@ -26,12 +27,14 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Modal, AutoComplete, Select, Input, Icon } from "ant-design-vue";
 import { KeyCode } from "@/util/keycode";
 import { SelectItem } from "@/constants/command";
+import CatalogMenu from "@/views/components/CatalogMenu.vue";
 
 const SelectOptGroup = Select.OptGroup;
 const SelectOpt = Select.Option;
 
 @Component({
   components: {
+    "catalog-menu": CatalogMenu,
     "a-modal": Modal,
     "a-auto-complete": AutoComplete,
     "a-select-opt-group": SelectOptGroup,
@@ -41,7 +44,8 @@ const SelectOpt = Select.Option;
   }
 })
 export default class CommandBar extends Vue {
-  @Prop() private dataset!: SelectItem[];
+  @Prop() private pageDataset!: SelectItem[];
+  private dataset: SelectItem[] = [];
 
   // AutoComplete
   private showDropDown: boolean = true;
@@ -61,6 +65,27 @@ export default class CommandBar extends Vue {
       }
     });
   }
+
+  // CatalogMenu
+  private catalogMenu: boolean = false;
+  showCatalogMenu() {
+    this.catalogMenu = true;
+  }
+  hideCatalogMenu() {
+    this.catalogMenu = false;
+  }
+  private catalogMenuDataSet: SelectItem[] = [
+    {
+      name: "show-catalog-menu",
+      desc: "显示菜单",
+      cmd: this.showCatalogMenu.bind(this)
+    },
+    {
+      name: "hide-catalog-menu",
+      desc: "隐藏菜单",
+      cmd: this.hideCatalogMenu.bind(this)
+    }
+  ];
 
   private visible: boolean = false;
   private command!: SelectItem;
@@ -107,15 +132,14 @@ export default class CommandBar extends Vue {
       }
     };
   }
-  getAllRouterUrl() {
-    let goto = (path: string) => {
-      this.$router.push(path);
-    };
-  }
 
   mounted() {
     this.onKeyDown();
-    this.getAllRouterUrl();
+    this.dataset = this.dataset
+      .concat(this.pageDataset)
+      .concat(this.catalogMenuDataSet);
+    this.dataSource = this.dataset;
+    console.log(this.dataset);
   }
 }
 </script>

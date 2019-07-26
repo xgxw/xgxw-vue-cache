@@ -5,7 +5,7 @@ interface State {
 };
 
 const state: State = {
-  expand: false,
+  expand: true,
 }
 
 const getters = {

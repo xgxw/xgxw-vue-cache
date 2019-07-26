@@ -1,7 +1,6 @@
 <template>
   <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
     <loading :spinning="fetching" />
-    <catalog-menu />
     <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -18,11 +17,9 @@ import {
   InvalidTokenError
 } from "../constants/error";
 import { isMobile } from "@/util/util";
-import CatalogMenu from "./components/CatalogMenu.vue";
 
 @Component({
   components: {
-    "catalog-menu": CatalogMenu,
     "editor-component": EditorComponent,
     loading: Loading
   },

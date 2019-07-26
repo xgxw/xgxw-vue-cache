@@ -6,8 +6,7 @@
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
     <footer class="print-footer">keep it simple stupid</footer>
-    <catalog-menu v-if="catalogMenu" />
-    <command-bar :dataset="commandBarData" />
+    <command-bar :pageDataset="commandBarData" />
   </div>
 </template>
 
@@ -24,7 +23,6 @@ import { isMobile } from "@/util/util";
 import { getEditorPath } from "@/router";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
-import CatalogMenu from "./components/CatalogMenu.vue";
 import CommandBar from "@/components/CommandBar.vue";
 import { SelectItem } from "../constants/command";
 
@@ -32,7 +30,6 @@ const articleDomID: string = "article";
 
 @Component({
   components: {
-    "catalog-menu": CatalogMenu,
     markdown: Markdown,
     loading: Loading,
     "command-bar": CommandBar
@@ -51,7 +48,6 @@ const articleDomID: string = "article";
 })
 export default class Article extends Vue {
   private isMobile = isMobile();
-  private catalogMenu: boolean = false;
 
   mounted() {
     let fid = getFidFromPath(this.$route);

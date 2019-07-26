@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="visible">
+  <div class="container">
     <a-menu v-show="expand" @click="handleClick" mode="inline" class="menu">
       <a-sub-menu key="article" @titleClick="titleClick">
         <span slot="title">
@@ -64,47 +64,25 @@ import { SelectItem } from "../../constants/command";
   }
 })
 export default class CatalogMenu extends Vue {
-  private visible: boolean = false;
   handleClick(data: any) {
     console.log("handleClick: ", data);
   }
   titleClick(data: any) {
     console.log("titleClick: ", data);
   }
-
-  // CommandBar
-  showCatalogMenu() {
-    this.visible = true;
-  }
-  hideCatalogMenu() {
-    this.visible = false;
-  }
-  private CommandBarData: SelectItem[] = [
-    {
-      name: "show-catalog-menu",
-      desc: "显示菜单",
-      cmd: this.showCatalogMenu.bind(this)
-    },
-    {
-      name: "hide-catalog-menu",
-      desc: "隐藏菜单",
-      cmd: this.hideCatalogMenu.bind(this)
-    }
-  ];
-
   mounted() {}
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/css/base.scss";
-$zindex: 12;
+@import "@/assets/css/zindex.scss";
 
 .container {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: $zindex;
+  z-index: $catalog-menu;
 }
 
 .menu {
@@ -113,7 +91,7 @@ $zindex: 12;
   left: 0;
   width: $menu-width;
   height: 100vh;
-  z-index: $zindex;
+  z-index: $catalog-menu;
 }
 
 .menu::v-deep .ant-menu-inline {
