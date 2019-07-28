@@ -18,34 +18,37 @@
         <a-input :id="commandBar" />
       </a-auto-complete>
     </a-modal>
-    <catalog-menu v-if="catalogMenu" />
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { Modal, AutoComplete, Select, Input, Icon } from "ant-design-vue";
+import { Modal, AutoComplete, Select, Input } from "ant-design-vue";
 import { KeyCode } from "@/util/keycode";
 import { SelectItem } from "@/constants/command";
-import CatalogMenu from "@/views/components/CatalogMenu.vue";
 
-const SelectOptGroup = Select.OptGroup;
 const SelectOpt = Select.Option;
 
 @Component({
   components: {
-    "catalog-menu": CatalogMenu,
     "a-modal": Modal,
     "a-auto-complete": AutoComplete,
-    "a-select-opt-group": SelectOptGroup,
     "a-select-option": SelectOpt,
-    "a-input": Input,
-    "a-icon": Icon
+    "a-input": Input
   }
 })
 export default class CommandBar extends Vue {
-  @Prop() private pageDataset!: SelectItem[];
-  private dataset: SelectItem[] = [];
+  @Prop() private dataset!: SelectItem[];
+  private dataSource: SelectItem[] = this.dataset;
+  @Watch("dataset")
+  handleDataSetChange() {
+    this.dataSource = this.dataset;
+  }
+
+  private visible: boolean = false;
+  private command!: SelectItem;
+  private false = false;
+  private commandBar = "commandBar";
 
   // AutoComplete
   private showDropDown: boolean = true;
@@ -66,38 +69,8 @@ export default class CommandBar extends Vue {
     });
   }
 
-  // CatalogMenu
-  private catalogMenu: boolean = false;
-  showCatalogMenu() {
-    this.catalogMenu = true;
-  }
-  hideCatalogMenu() {
-    this.catalogMenu = false;
-  }
-  private catalogMenuDataSet: SelectItem[] = [
-    {
-      name: "show-catalog-menu",
-      desc: "显示菜单",
-      cmd: this.showCatalogMenu.bind(this)
-    },
-    {
-      name: "hide-catalog-menu",
-      desc: "隐藏菜单",
-      cmd: this.hideCatalogMenu.bind(this)
-    }
-  ];
-
-  private visible: boolean = false;
-  private command!: SelectItem;
-  private false = false;
-  private commandBar = "commandBar";
-  private dataSource: SelectItem[] = this.dataset;
-
   // Handle Show/Hide
   showCommandBar() {
-    this.$nextTick(() => {
-      // this.dataSource = [];
-    });
     this.visible = true;
     this.$nextTick(() => {
       this.showDropDown = true;
@@ -135,11 +108,6 @@ export default class CommandBar extends Vue {
 
   mounted() {
     this.onKeyDown();
-    this.dataset = this.dataset
-      .concat(this.pageDataset)
-      .concat(this.catalogMenuDataSet);
-    this.dataSource = this.dataset;
-    console.log(this.dataset);
   }
 }
 </script>

@@ -33,7 +33,6 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { KeyCode } from "@/util/keycode";
 
-// rename: command-bar
 // 搞不定了, 模仿 [chrome-vim](https://github.com/1995eaton/chromium-vim) 写的
 
 interface SelectItem {
