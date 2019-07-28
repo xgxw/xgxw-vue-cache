@@ -81,9 +81,12 @@ export default class Article extends Vue {
   ];
   print() {
     console.log("print");
-    this.$nextTick(() => {
-      window.print();
-    });
+    // 先通过这种hack的方式解决dom渲染时序的问题(估计antd/Modal-visibal 有些问题)
+    setTimeout(() => {
+      this.$nextTick(() => {
+        window.print();
+      });
+    }, 1000);
   }
   editor() {
     console.log("editor");
