@@ -1,11 +1,10 @@
 <template>
   <div class="container">
     <loading :spinning="fetching" />
-    <header class="print-header">www.xiagaoxiawan.com</header>
     <article id="article" class="article">
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
-    <footer class="print-footer">keep it simple stupid</footer>
+    <footer class="print-footer">{{path}}</footer>
     <command-bar :pageDataset="commandBarData" />
   </div>
 </template>
@@ -48,8 +47,10 @@ const articleDomID: string = "article";
 })
 export default class Article extends Vue {
   private isMobile = isMobile();
+  private path = "";
 
   mounted() {
+    this.path = "www.xiagaoxiawan.com" + this.$route.fullPath;
     let fid = getFidFromPath(this.$route);
     this.fetchContent(fid)
       .catch(e => {
@@ -133,9 +134,6 @@ export default class Article extends Vue {
 }
 
 @media screen {
-  .print-header {
-    display: none;
-  }
   .print-footer {
     display: none;
   }
@@ -146,13 +144,15 @@ export default class Article extends Vue {
     size: auto;
     margin: 1.2cm auto 0 auto;
   }
-  .print-header {
-    position: absolute;
-    top: 2cm;
+  .article::v-deep .v-note-wrapper {
+    background-color: white !important;
   }
   .print-footer {
     position: absolute;
     bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
