@@ -30,22 +30,14 @@ export default class XCommandBar extends Vue {
 
   // CatalogMenu
   private catalogMenu: boolean = false;
-  showCatalogMenu() {
-    this.catalogMenu = true;
-  }
-  hideCatalogMenu() {
-    this.catalogMenu = false;
+  toggleCatalogMenu() {
+    this.catalogMenu = !this.catalogMenu;
   }
   private catalogMenuDataSet: SelectItem[] = [
     {
-      name: "show-catalog-menu",
-      desc: "显示菜单",
-      cmd: this.showCatalogMenu.bind(this)
-    },
-    {
-      name: "hide-catalog-menu",
-      desc: "隐藏菜单",
-      cmd: this.hideCatalogMenu.bind(this)
+      name: "toggle-catalog-menu",
+      desc: "切换菜单显示",
+      cmd: this.toggleCatalogMenu.bind(this)
     }
   ];
 

@@ -28,12 +28,12 @@
         <a-menu-item key="9">Option 9</a-menu-item>
       </a-sub-menu>
     </a-menu>
-    <a-icon
+    <!-- <a-icon
       :type="expand ? 'left' : 'right'"
       class="trigger"
       v-bind:class="{ 'trigger-expand': expand }"
       @click="toggleExpand(!expand)"
-    />
+    /> -->
   </div>
 </template>
 
