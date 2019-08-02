@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <command-bar :commandType="commandType" :dataset="dataset" />
+    <command-bar
+      :visible="showCommandBar"
+      @onEnterKeyDown="onEnterKeyDown"
+      :commandType="commandType"
+      :dataset="dataset"
+    />
     <catalog-menu v-show="menuExpand" />
   </div>
 </template>
@@ -30,6 +35,7 @@ import { mapGetters, mapActions } from "vuex";
 })
 export default class XCommandBar extends Vue {
   @Prop() private pageDataset!: SelectItem[];
+  private showCommandBar: boolean = false;
   private commandType = "";
   private dataset: SelectItem[] = [];
   @Watch("pageDataset")
@@ -50,12 +56,29 @@ export default class XCommandBar extends Vue {
     }
   ];
 
+  onEnterKeyDown(command: SelectItem) {
+    this.showCommandBar = false;
+  }
+
+  onKeyDown() {
+    let onKeyDown = (e: KeyboardEvent) => {
+      switch (true) {
+        case e.keyCode == KeyCode.space && e.altKey && !this.showCommandBar: {
+          this.showCommandBar = true;
+          break;
+        }
+        case e.keyCode == KeyCode.esc && this.showCommandBar: {
+          this.showCommandBar = false;
+          break;
+        }
+      }
+    };
+    document.addEventListener("keydown", onKeyDown.bind(this));
+  }
+
   mounted() {
     this.handlePageDatasetChange();
-    // let onkeydown = document.onkeydown
-    // document.onkeydown = function(e) {
-    //   if(onkeydown)onkeydown(e)
-    // };
+    this.onKeyDown();
   }
 }
 </script>
