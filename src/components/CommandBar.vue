@@ -169,10 +169,11 @@ $color: #f1f1f1;
 $color-hover: #1c1c1c;
 
 .container {
-  position: absolute;
+  position: fixed;
   z-index: $command-bar;
-  width: 100%;
+  width: 100vw;
   top: 0;
+  left: 0;
 }
 
 .command-bar {
