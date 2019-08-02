@@ -42,7 +42,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { client } from "@/api/index";
 import { Menu, Icon } from "ant-design-vue";
 import { mapGetters, mapActions } from "vuex";
-import { SelectItem } from "../../constants/command";
 
 @Component({
   components: {
