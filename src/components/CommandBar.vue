@@ -117,6 +117,8 @@ export default class CommandBar extends Vue {
             id = id + this.nextFocusIndex();
           }
           this.focusDom(id);
+          e.stopPropagation();
+          e.preventDefault();
           break;
         }
         case e.keyCode === KeyCode.enter && this.visible: {
@@ -137,16 +139,6 @@ export default class CommandBar extends Vue {
       }
     };
     document.addEventListener("keydown", onkeydown.bind(this));
-    // 取消默认的tab按键事件. 默认事件会影响监听组件中的处理: 默认事件中 tab 会自动聚焦到 input/输入框
-    // 等组件且在自定义 EventListener 之后触发. 自定义监听事件更改了focus, 然后又被默认事件更改了, 从而使逻辑无效.
-    let _this = this;
-    document.onkeydown = function(e) {
-      switch (true) {
-        case e.keyCode == KeyCode.tab && _this.visible: {
-          return false;
-        }
-      }
-    };
   }
   onKeyUp() {
     let onKeyUp = (e: KeyboardEvent) => {

@@ -34,3 +34,5 @@ function redirectToLogin(router: VueRouter): Promise<any> {
   })
 }
 ```
+
+事件流 / dom异步渲染更新
