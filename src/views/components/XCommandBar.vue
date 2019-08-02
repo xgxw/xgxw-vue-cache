@@ -7,9 +7,8 @@
 
 <script lang='ts'>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { SelectItem } from "@/constants/command";
 import CatalogMenu from "./CatalogMenu.vue";
-import CommandBar from "@/components/CommandBar.vue";
+import CommandBar, { SelectItem } from "@/components/CommandBar.vue";
 import { KeyCode } from "@/util/keycode";
 import { mapGetters, mapActions } from "vuex";
 
@@ -53,6 +52,10 @@ export default class XCommandBar extends Vue {
 
   mounted() {
     this.handlePageDatasetChange();
+    // let onkeydown = document.onkeydown
+    // document.onkeydown = function(e) {
+    //   if(onkeydown)onkeydown(e)
+    // };
   }
 }
 </script>

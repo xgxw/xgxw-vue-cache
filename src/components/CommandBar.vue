@@ -31,7 +31,12 @@
 <script lang='ts'>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { KeyCode, isEditKey } from "@/util/keycode";
-import { SelectItem } from "@/constants/command";
+
+export interface SelectItem {
+  name: string;
+  desc: string;
+  cmd: () => void;
+}
 
 // 模仿 [chrome-vim](https://github.com/1995eaton/chromium-vim)
 

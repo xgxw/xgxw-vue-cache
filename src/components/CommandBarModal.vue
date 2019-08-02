@@ -25,9 +25,13 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Modal, AutoComplete, Select, Input } from "ant-design-vue";
 import { KeyCode } from "@/util/keycode";
-import { SelectItem } from "@/constants/command";
 
 const SelectOpt = Select.Option;
+export interface SelectItem {
+  name: string;
+  desc: string;
+  cmd: () => void;
+}
 
 @Component({
   components: {

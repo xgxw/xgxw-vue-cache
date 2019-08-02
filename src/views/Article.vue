@@ -23,7 +23,7 @@ import { getEditorPath } from "@/router";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
 import CommandBar from "./components/XCommandBar.vue";
-import { SelectItem } from "../constants/command";
+import { SelectItem } from "@/components/CommandBar.vue";
 
 const articleDomID: string = "article";
 
