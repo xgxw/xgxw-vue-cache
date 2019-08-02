@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <command-bar :dataset="dataset" />
+    <command-bar :commandType="commandType" :dataset="dataset" />
     <catalog-menu v-if="catalogMenu" />
   </div>
 </template>
@@ -19,6 +19,7 @@ import CommandBar from "@/components/CommandBar.vue";
 })
 export default class XCommandBar extends Vue {
   @Prop() private pageDataset!: SelectItem[];
+  private commandType = "";
   private dataset: SelectItem[] = [];
   @Watch("pageDataset")
   handlePageDatasetChange() {

@@ -37,7 +37,7 @@ const SelectOpt = Select.Option;
     "a-input": Input
   }
 })
-export default class CommandBar2 extends Vue {
+export default class CommandBarModal extends Vue {
   @Prop() private dataset!: SelectItem[];
   private dataSource: SelectItem[] = this.dataset;
   @Watch("dataset")
@@ -95,7 +95,12 @@ export default class CommandBar2 extends Vue {
         }
         case e.keyCode == KeyCode.enter && _this.visible: {
           _this.hideCommandBar();
-          _this.command.cmd();
+          // 先通过这种hack的方式解决dom渲染时序的问题(估计antd/Modal-visibal 有些问题)
+          setTimeout(() => {
+            _this.$nextTick(() => {
+              _this.command.cmd();
+            });
+          }, 500);
           break;
         }
         case e.keyCode == KeyCode.esc && _this.visible: {

@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-show="visible">
     <div class="command-bar">
-      <span>:</span>
+      <span>{{commandType}}:</span>
       <input
         id="command-bar-input"
         v-model="inputText"
@@ -37,30 +37,22 @@ import { SelectItem } from "@/constants/command";
 
 @Component({})
 export default class CommandBar extends Vue {
+  @Prop() private commandType!: String;
   @Prop() private dataset!: SelectItem[];
-  private visible: boolean = true;
-  // command 当前选中的命令
-  private command!: SelectItem;
-  // suggests 建议的数据集
-  private suggests: SelectItem[] = this.dataset;
-  // focusIndex 当前应该获取焦点的 command-item 项. 如在 tab 时使用
-  private focusIndex: number = -1;
-  // inputText 用户输入的字符串
-  private inputText: string = "";
+  private visible: boolean = false;
+  private command: SelectItem | null = null; // command 当前选中的命令
+  private suggests: SelectItem[] = this.dataset; // suggests 建议的数据集
+  private focusIndex: number = -1; // focusIndex 当前获取焦点的 command-item 项. 处理tab按键事件时使用
+  private inputText: string = ""; // inputText 用户输入的字符串
 
-  // handleDataSetChange 使用dataset初始化suggests
-  @Watch("dataset")
-  handleDataSetChange() {
+  init() {
+    this.inputText = "";
     this.suggests = this.dataset;
+    this.focusIndex = -1;
+    this.command = null;
+    this.focusDom("command-bar-input");
   }
 
-  // 处理因tab导致command-item焦点发生变化
-  // handleSuggestsChange 数组变化时重置焦点索引
-  @Watch("suggests")
-  handleSuggestsChange() {
-    this.focusIndex = -1;
-  }
-  // nextFocusIndex 移动到下一个索引点
   nextFocusIndex(): number {
     this.focusIndex++;
     if (this.focusIndex == this.suggests.length) {
@@ -68,24 +60,30 @@ export default class CommandBar extends Vue {
     }
     return this.focusIndex;
   }
+  prevFocusIndex(): number {
+    this.focusIndex--;
+    if (this.focusIndex == -1) {
+      this.focusIndex = this.suggests.length - 1;
+    }
+    return this.focusIndex;
+  }
+
   // handleFocus 当item获取焦点时触发的操作
   handleFocus(suggest: SelectItem) {
     this.inputText = suggest.name;
     this.command = suggest;
   }
 
-  @Watch("inputText")
-  onInputTextChange() {
-    // // 特殊情况: tab切换选框不刷新
-    // this.suggests = [];
-    // this.dataset.forEach(item => {
-    //   if (item.name.indexOf(this.inputText) != -1) {
-    //     this.suggests.push(item);
-    //   }
-    // });
+  updateSuggests() {
+    this.focusIndex = -1;
+    this.suggests = [];
+    this.dataset.forEach(item => {
+      if (item.name.indexOf(this.inputText) != -1) {
+        this.suggests.push(item);
+      }
+    });
   }
 
-  // focusDom 将焦点设置为传入的id所指的dom
   focusDom(id: string) {
     this.$nextTick(() => {
       let dom = document.getElementById(id);
@@ -95,10 +93,9 @@ export default class CommandBar extends Vue {
     });
   }
 
-  // Handle Show/Hide
   showCommandBar() {
     this.visible = true;
-    this.focusDom("command-bar-input");
+    this.init();
   }
   hideCommandBar() {
     this.visible = false;
@@ -109,7 +106,12 @@ export default class CommandBar extends Vue {
     document.onkeydown = function(e) {
       switch (true) {
         case e.keyCode == KeyCode.tab && _this.visible: {
-          let id = "item_" + _this.nextFocusIndex();
+          let id = "item_";
+          if (e.shiftKey) {
+            id = id + _this.prevFocusIndex();
+          } else {
+            id = id + _this.nextFocusIndex();
+          }
           _this.focusDom(id);
           return false;
         }
@@ -128,14 +130,31 @@ export default class CommandBar extends Vue {
           _this.hideCommandBar();
           break;
         }
-        case isEditKey(e) && _this.visible: {
+        case (isEditKey(e) || e.keyCode == KeyCode.backspace) &&
+          _this.visible: {
+          _this.focusDom("command-bar-input");
+          if (e.keyCode == KeyCode.backspace) {
+            _this.inputText = _this.inputText.slice(
+              0,
+              _this.inputText.length - 1
+            );
+          } else {
+            _this.inputText += e.key;
+          }
+          _this.updateSuggests();
+          return false;
         }
       }
     };
   }
+  onKeyUp() {
+    let _this = this;
+    document.onkeyup = function(e) {};
+  }
 
   mounted() {
     this.onKeyDown();
+    this.onKeyUp();
   }
 }
 </script>

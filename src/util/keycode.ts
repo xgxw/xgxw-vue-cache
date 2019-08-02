@@ -1,8 +1,10 @@
 export enum KeyCode {
+  backspace = 8,
   tab = 9,
   enter = 13,
   esc = 27,
   space = 32,
+  delete = 46,
   zero = 48,
   nine = 57,
   a = 65,
