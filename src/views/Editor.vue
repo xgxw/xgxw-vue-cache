@@ -2,6 +2,7 @@
   <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
     <loading :spinning="fetching" />
     <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
+    <command-bar />
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
+import CommandBar from "./components/XCommandBar.vue";
 import { getFidFromPath } from "@/constants/guard";
 import { mapGetters, mapActions } from "vuex";
 import {
@@ -21,7 +23,8 @@ import { isMobile } from "@/util/util";
 @Component({
   components: {
     "editor-component": EditorComponent,
-    loading: Loading
+    loading: Loading,
+    "command-bar": CommandBar
   },
   computed: {
     ...mapGetters({

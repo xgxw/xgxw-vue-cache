@@ -5,7 +5,7 @@ interface State {
 };
 
 const state: State = {
-  expand: true,
+  expand: false,
 }
 
 const getters = {
@@ -16,9 +16,9 @@ const getters = {
 
 const actions = {
   // toggleExpand 切换 menu 显示状态
-  async toggleExpand({ commit, state }, expand: boolean): Promise<any> {
+  async toggleExpand({ commit, state }): Promise<any> {
     return new Promise<any>((resolved, reject) => {
-      commit("toggleExpand", expand)
+      commit("toggleExpand", !state.expand)
       resolved()
     })
   },

@@ -32,7 +32,7 @@
       :type="expand ? 'left' : 'right'"
       class="trigger"
       v-bind:class="{ 'trigger-expand': expand }"
-      @click="toggleExpand(!expand)"
+      @click="toggleExpand()"
     /> -->
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <command-bar :commandType="commandType" :dataset="dataset" />
-    <catalog-menu v-if="catalogMenu" />
+    <catalog-menu v-show="menuExpand" />
   </div>
 </template>
 
@@ -10,11 +10,23 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { SelectItem } from "@/constants/command";
 import CatalogMenu from "./CatalogMenu.vue";
 import CommandBar from "@/components/CommandBar.vue";
+import { KeyCode } from "@/util/keycode";
+import { mapGetters, mapActions } from "vuex";
 
 @Component({
   components: {
     "catalog-menu": CatalogMenu,
     "command-bar": CommandBar
+  },
+  computed: {
+    ...mapGetters({
+      menuExpand: "menu/isExpand"
+    })
+  },
+  methods: {
+    ...mapActions({
+      toggleCatalogMenu: "menu/toggleExpand"
+    })
   }
 })
 export default class XCommandBar extends Vue {
@@ -24,16 +36,13 @@ export default class XCommandBar extends Vue {
   @Watch("pageDataset")
   handlePageDatasetChange() {
     this.dataset = [];
-    this.dataset = this.dataset
-      .concat(this.pageDataset)
-      .concat(this.catalogMenuDataSet);
+    this.dataset = this.dataset.concat(this.catalogMenuDataSet);
+    if (this.pageDataset && this.pageDataset.length > 0) {
+      this.dataset = this.dataset.concat(this.pageDataset);
+    }
   }
 
   // CatalogMenu
-  private catalogMenu: boolean = false;
-  toggleCatalogMenu() {
-    this.catalogMenu = !this.catalogMenu;
-  }
   private catalogMenuDataSet: SelectItem[] = [
     {
       name: "toggle-catalog-menu",
@@ -43,9 +52,7 @@ export default class XCommandBar extends Vue {
   ];
 
   mounted() {
-    this.dataset = this.dataset
-      .concat(this.pageDataset)
-      .concat(this.catalogMenuDataSet);
+    this.handlePageDatasetChange();
   }
 }
 </script>
