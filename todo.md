@@ -5,6 +5,11 @@ feature
     - 偶尔说一些 "名言"(网上抄的, 自己写的, 都行)
     - 添加对话功能, 可以介入小冰等api或者自己学AI技术
 
+两种方案:
+1. 使用字符/拼接出的人物
+2. 使用3d库
+    - https://threejs.org/examples/#webgl_loader_mmd_pose
+
 其他代办
 1. Login页面完善
 2. 移动端支持
