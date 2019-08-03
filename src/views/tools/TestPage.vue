@@ -1,16 +1,16 @@
 <template>
   <div class="container">
-    <shell />
+    <stick-man />
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import CommandBar from "@/components/CommandBar.vue";
+import StickManDemo from "../demo/StickMan.vue";
 
 @Component({
   components: {
-    shell: CommandBar
+    "stick-man": StickManDemo
   }
 })
 export default class TestPage extends Vue {
