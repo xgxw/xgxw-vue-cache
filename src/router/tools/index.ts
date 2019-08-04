@@ -3,8 +3,9 @@ import Index from '@/views/tools/Index.vue';
 import Editor from '@/views/tools/Editor.vue';
 import TestPage from '@/views/tools/TestPage.vue';
 
+export const toolsPath = "/tools"
 export const index: RouteConfig = {
-  path: '/tools',
+  path: toolsPath,
   name: 'tools',
   component: Index,
   meta: {
@@ -12,8 +13,9 @@ export const index: RouteConfig = {
   },
 };
 
+export const editorPath = "/tools/etitor"
 export const editor: RouteConfig = {
-  path: '/tools/etitor',
+  path: editorPath,
   name: 'tools_editor',
   component: Editor,
   meta: {

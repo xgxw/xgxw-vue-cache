@@ -8,6 +8,7 @@ export enum KeyCode {
   zero = 48,
   nine = 57,
   a = 65,
+  g = 71,
   z = 90,
   numpad_zero = 96,
   numpad_nine = 105

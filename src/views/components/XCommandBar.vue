@@ -13,9 +13,12 @@
 <script lang='ts'>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import CatalogMenu from "./CatalogMenu.vue";
-import CommandBar, { SelectItem } from "@/components/CommandBar.vue";
+import CommandBar from "@/components/CommandBar.vue";
+import { SelectItem, CommandType } from "@/constants/command";
 import { KeyCode } from "@/util/keycode";
 import { mapGetters, mapActions } from "vuex";
+import { getEditorPath, getArticlePath, getIndexPath } from "@/router";
+import { toolsPath, editorPath } from "@/router/tools";
 
 @Component({
   components: {
@@ -38,12 +41,13 @@ export default class XCommandBar extends Vue {
   private showCommandBar: boolean = false;
   private commandType = "";
   private dataset: SelectItem[] = [];
+  private defaultDateSet: SelectItem[] = [];
   @Watch("pageDataset")
   handlePageDatasetChange() {
-    this.dataset = [];
-    this.dataset = this.dataset.concat(this.catalogMenuDataSet);
+    this.defaultDateSet = [];
+    this.defaultDateSet = this.defaultDateSet.concat(this.catalogMenuDataSet);
     if (this.pageDataset && this.pageDataset.length > 0) {
-      this.dataset = this.dataset.concat(this.pageDataset);
+      this.defaultDateSet = this.defaultDateSet.concat(this.pageDataset);
     }
   }
 
@@ -56,6 +60,34 @@ export default class XCommandBar extends Vue {
     }
   ];
 
+  // Route
+  private goActionStr: String = "go";
+  private routeDateSet: SelectItem[] = [
+    {
+      name: this.goActionStr + "-home",
+      desc: "go to home page",
+      cmd: this.goRoute.bind(this, getIndexPath())
+    },
+    {
+      name: this.goActionStr + "-article-todo",
+      desc: "go to todo page",
+      cmd: this.goRoute.bind(this, getArticlePath("todo"))
+    },
+    {
+      name: this.goActionStr + "-tools",
+      desc: "go to tools index page",
+      cmd: this.goRoute.bind(this, toolsPath)
+    },
+    {
+      name: this.goActionStr + "-tools-editor",
+      desc: "go to markdown editor tools page",
+      cmd: this.goRoute.bind(this, editorPath)
+    }
+  ];
+  goRoute(path: String) {
+    console.log(path);
+  }
+
   onEnterKeyDown(command: SelectItem) {
     this.showCommandBar = false;
   }
@@ -63,8 +95,16 @@ export default class XCommandBar extends Vue {
   onKeyDown() {
     let onKeyDown = (e: KeyboardEvent) => {
       switch (true) {
-        case e.keyCode == KeyCode.space && e.altKey && !this.showCommandBar: {
-          this.showCommandBar = true;
+        case e.keyCode == KeyCode.space && e.altKey: {
+          this.showCommandBar = !this.showCommandBar;
+          this.commandType = CommandType.default;
+          this.dataset = this.defaultDateSet;
+          break;
+        }
+        case e.keyCode == KeyCode.g && e.altKey: {
+          this.showCommandBar = !this.showCommandBar;
+          this.commandType = CommandType.go;
+          this.dataset = this.routeDateSet;
           break;
         }
         case e.keyCode == KeyCode.esc && this.showCommandBar: {
