@@ -173,9 +173,11 @@ $color-hover: #1c1c1c;
   top: 0;
   width: 100vw;
   padding-left: 0.2rem;
+  display: flex;
+  justify-content: space-between;
 
   .command-bar-input {
-    // width: 100%;
+    flex-grow: 1;
     margin-left: 0.5rem;
     background-color: $background-color;
     color: $color;
