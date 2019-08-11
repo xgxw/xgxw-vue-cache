@@ -28,7 +28,7 @@ import { isMobile } from "@/util/util";
   },
   computed: {
     ...mapGetters({
-      menuExpand: "menu/isExpand",
+      menuExpand: "catalog/isExpand",
       content: "article/getContent",
       fetching: "article/isFetching"
     })

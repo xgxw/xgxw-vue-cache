@@ -1,7 +1,7 @@
 <template>
-  <div class="container" v-bind:class="{ 'menu-expand': menuExpand }">
+  <div class="container" v-bind:class="{ 'catalog-expand': catalogExpand }">
     <loading :spinning="fetching" />
-    <catalog-menu v-if="!isMobile" />
+    <command-bar />
     <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -10,20 +10,19 @@
 import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
+import CommandBar from "../components/XCommandBar.vue";
 import { mapGetters, mapActions } from "vuex";
 import { isMobile } from "@/util/util";
-import AutoSaveClient from "@/util/autosave";
-import CatalogMenu from "../components/CatalogMenu.vue";
 
 @Component({
   components: {
-    "catalog-menu": CatalogMenu,
+    "command-bar": CommandBar,
     "editor-component": EditorComponent,
     loading: Loading
   },
   computed: {
     ...mapGetters({
-      menuExpand: "menu/isExpand",
+      catalogExpand: "catalog/isExpand",
       content: "article/getContent",
       fetching: "article/isFetching"
     })
