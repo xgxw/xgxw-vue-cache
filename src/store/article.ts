@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { client, FetchFileRequset, UploadFileRequset } from '@/api';
 import { RequestError, UnkownRequestError, UnauthorizedError, instanceOfRequestError } from '@/constants/error';
 
@@ -14,16 +15,15 @@ interface State {
   data: Article,
 };
 
-const defaultArticle: Article = {
-  fid: "",
-  name: "",
-  content: "",
-}
 const state: State = {
   fetching: true,
   uploading: true,
   changedSinceLastSave: true,
-  data: defaultArticle,
+  data: {
+    fid: "",
+    name: "",
+    content: "",
+  },
 }
 
 const getters = {
@@ -41,17 +41,12 @@ const getters = {
   }
 }
 
-// 从本地根据fid获取数据时, 添加key修饰关键字
-function getLocalFileID(fid: string): string {
-  return 'article_local_' + fid;
-}
-
 const actions = {
   // fetchContent 初次进入时下载文件. 传入文件名称.
   async fetchContent({ commit }, fid: string): Promise<any> {
     commit("fetchingContent", fid)
     return new Promise<any>((resolved, reject) => {
-      let article: Article = defaultArticle;
+      let article: Article;
       client.fetchFile({ fid: fid }).then(res => {
         article = {
           fid: res.data.fid,
@@ -72,16 +67,18 @@ const actions = {
   },
   // fetchContentLocal 初次进入时下载文件. 传入文件名称.
   async fetchContentLocal({ commit }, fid: string): Promise<any> {
-    let _fid: string = getLocalFileID(fid)
     commit("fetchingContent", fid)
     return new Promise<any>((resolved, reject) => {
-      let article: Article = defaultArticle;
-      let articleStr = window.localStorage.getItem(_fid);
+      let article: Article = {
+        fid: fid
+      };
+      let articleStr = window.localStorage.getItem(fid);
       if (articleStr) {
         article = JSON.parse(<string>articleStr);
-        if (!article || article.fid != fid) {
-          // 当解析错误或解析出空数据时, 重置为默认的数据
-          article = defaultArticle
+        if (!article || !article.fid || article.fid != fid) {
+          article = {
+            fid: fid
+          };
         }
       }
       resolved()
@@ -124,8 +121,7 @@ const actions = {
   async uploadContentLocal({ commit, state }, content: string): Promise<any> {
     commit("uploadContent", content)
     return new Promise<any>((resolved, reject) => {
-      let localFid = getLocalFileID(state.data.fid);
-      window.localStorage.setItem(localFid, JSON.stringify(state.data))
+      window.localStorage.setItem(state.data.fid, JSON.stringify(state.data))
       resolved()
       commit("uploadContentFinish")
     })
@@ -141,12 +137,20 @@ const mutations = {
   fetchingContentFinish(state: State, article: Article) {
     state.fetching = false
     state.changedSinceLastSave = false;
+    if (!article) {
+      article = {
+        fid: "",
+        name: "",
+        content: ""
+      }
+    }
     state.data = article
     console.log("fetchingContentFinish: ", article)
   },
   changeContent(state: State, content: string) {
     state.data.content = content
     state.changedSinceLastSave = true;
+    console.log("changeContent: ", content)
   },
   uploadContent(state: State, content: string) {
     state.uploading = true

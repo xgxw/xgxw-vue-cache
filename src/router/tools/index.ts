@@ -13,7 +13,7 @@ export const index: RouteConfig = {
   },
 };
 
-export const editorPath = "/tools/etitor"
+export const editorPath = "/tools/editor"
 export const editor: RouteConfig = {
   path: editorPath,
   name: 'tools_editor',

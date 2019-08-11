@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-bind:class="{ 'catalog-expand': catalogExpand }">
     <loading :spinning="fetching" />
-    <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
+    <editor-component :isMobile="isMobile" :content="content" :save="save" />
   </div>
 </template>
 
@@ -54,9 +54,6 @@ export default class Editor extends Vue {
           this.$message.warning("未找到文章", 2);
       }
     });
-  }
-  change(data: string) {
-    this.changeContent(data);
   }
   save(data: string) {
     const hide: TimerHandler = this.$message.loading("uploading..", 0);

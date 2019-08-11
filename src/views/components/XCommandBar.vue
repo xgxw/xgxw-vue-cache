@@ -74,7 +74,11 @@ export default class XCommandBar extends Vue {
       editorPath
     ];
     if (this.paths) {
-      paths = paths.concat(this.paths);
+      for (let i = 0; i < this.paths.length; i++) {
+        let path = this.paths[i];
+        paths.push("/article/" + path);
+        paths.push("/editor/" + path);
+      }
     }
     for (let i = 0; i < paths.length; i++) {
       let path = paths[i];
@@ -88,7 +92,9 @@ export default class XCommandBar extends Vue {
     return result;
   }
   goRoute(path: string) {
-    this.$router.push(path);
+    this.$nextTick(() => {
+      this.$router.push(path);
+    });
   }
 
   onEnterKeyDown(command: SelectItem) {
