@@ -203,6 +203,7 @@ export interface DelFilesResponse { }
 export interface FetchCatalogRequset { }
 export interface FetchCatalogResponse {
   data: {
-    catalog: string
+    catalog: {},
+    paths: string[]
   }
 }

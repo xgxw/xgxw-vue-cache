@@ -42,7 +42,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { client } from "@/api/index";
 import { Menu, Icon } from "ant-design-vue";
 import { mapGetters, mapActions } from "vuex";
-import { UnauthorizedError, InvalidTokenError } from "../../constants/error";
 
 @Component({
   components: {
@@ -60,7 +59,6 @@ import { UnauthorizedError, InvalidTokenError } from "../../constants/error";
   },
   methods: {
     ...mapActions({
-      fetchCatalog: "catalog/fetchCatalog",
       toggleExpand: "catalog/toggleExpand"
     })
   }
@@ -72,19 +70,7 @@ export default class Catalog extends Vue {
   titleClick(data: any) {
     console.log("titleClick: ", data);
   }
-  mounted() {
-    this.fetchCatalog()
-      .catch(e => {
-        switch (e) {
-          case InvalidTokenError:
-            this.$message.warning("认证过期", 2);
-            return;
-          default:
-            this.$message.warning("获取文件列表失败", 2);
-        }
-      })
-      .finally(() => {});
-  }
+  mounted() {}
 }
 </script>
 

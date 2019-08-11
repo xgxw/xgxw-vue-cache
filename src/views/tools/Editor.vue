@@ -1,7 +1,6 @@
 <template>
   <div class="container" v-bind:class="{ 'catalog-expand': catalogExpand }">
     <loading :spinning="fetching" />
-    <command-bar />
     <editor-component :isMobile="isMobile" :content="content" :change="change" :save="save" />
   </div>
 </template>
@@ -10,13 +9,11 @@
 import { Component, Vue } from "vue-property-decorator";
 import { default as EditorComponent } from "@/components/Editor.vue";
 import Loading from "@/components/Loading.vue";
-import CommandBar from "../components/XCommandBar.vue";
 import { mapGetters, mapActions } from "vuex";
 import { isMobile } from "@/util/util";
 
 @Component({
   components: {
-    "command-bar": CommandBar,
     "editor-component": EditorComponent,
     loading: Loading
   },

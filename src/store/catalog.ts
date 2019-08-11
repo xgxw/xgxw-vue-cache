@@ -5,13 +5,15 @@ interface State {
   expand: boolean,
   data: {
     catalog: {},
+    paths: string[]
   }
 };
 
 const state: State = {
   expand: false,
   data: {
-    catalog: {}
+    catalog: {},
+    paths: []
   }
 }
 
@@ -21,7 +23,15 @@ const getters = {
   },
   getCatalog: (state: State): {} => {
     return state.data.catalog
+  },
+  getPaths: (state: State): string[] => {
+    return state.data.paths
   }
+}
+
+interface FetchCatalogData {
+  catalog: {},
+  paths: string[]
 }
 
 const actions = {
@@ -36,9 +46,14 @@ const actions = {
     commit("fetchCatalog")
     return new Promise<any>((resolved, reject) => {
       let r: FetchCatalogRequset = {}
-      let catalog = {}
+      let data: FetchCatalogData = {
+        catalog: {},
+        paths: []
+      }
+
       client.fetchCatalog(r).then(res => {
-        catalog = res.data
+        data.catalog = res.data.catalog
+        data.paths = res.data.paths
         resolved()
       }).catch(e => {
         if (instanceOfRequestError(e)) {
@@ -47,7 +62,7 @@ const actions = {
         console.log("请求服务器发生错误: ", e)
         reject(UnkownRequestError)
       }).finally(() => {
-        commit("fetchCatalogFinish", catalog)
+        commit("fetchCatalogFinish", data)
       })
     })
   },
@@ -61,9 +76,10 @@ const mutations = {
   fetchCatalog(state: State) {
     console.log("fetchCatalog")
   },
-  fetchCatalogFinish(state: State, catalog: {}) {
-    state.data.catalog = catalog;
-    console.log("getCatalogFinish: ", catalog)
+  fetchCatalogFinish(state: State, data: FetchCatalogData) {
+    state.data.catalog = data.catalog;
+    state.data.paths = data.paths
+    console.log("getCatalogFinish: ", data.catalog, data.paths)
   }
 }
 export default ({

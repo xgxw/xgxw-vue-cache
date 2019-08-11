@@ -1,17 +1,12 @@
 <template>
-  <div class="container">
-    <shell />
-  </div>
+  <div class="container"></div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import CommandBar from "@/components/CommandBar.vue";
 
 @Component({
-  components: {
-    shell: CommandBar
-  }
+  components: {}
 })
 export default class TestPage extends Vue {
   mounted() {}

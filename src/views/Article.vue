@@ -5,7 +5,6 @@
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </article>
     <footer class="print-footer">{{path}}</footer>
-    <command-bar :pageDataset="commandBarData" />
   </div>
 </template>
 
@@ -22,7 +21,6 @@ import { isMobile } from "@/util/util";
 import { getEditorPath } from "@/router";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
-import CommandBar from "./components/XCommandBar.vue";
 import { SelectItem } from "@/constants/command";
 
 const articleDomID: string = "article";
@@ -31,7 +29,6 @@ const articleDomID: string = "article";
   components: {
     markdown: Markdown,
     loading: Loading,
-    "command-bar": CommandBar
   },
   computed: {
     ...mapGetters({

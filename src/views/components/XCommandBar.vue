@@ -19,19 +19,22 @@ import { KeyCode } from "@/util/keycode";
 import { mapGetters, mapActions } from "vuex";
 import { getEditorPath, getArticlePath, getIndexPath } from "@/router";
 import { toolsPath, editorPath } from "@/router/tools";
+import { InvalidTokenError } from "../../constants/error";
 
 @Component({
   components: {
-    "catalog": Catalog,
+    catalog: Catalog,
     "command-bar": CommandBar
   },
   computed: {
     ...mapGetters({
+      paths: "catalog/getPaths",
       catalogExpand: "catalog/isExpand"
     })
   },
   methods: {
     ...mapActions({
+      fetchCatalog: "catalog/fetchCatalog",
       toggleCatalog: "catalog/toggleExpand"
     })
   }
@@ -61,31 +64,31 @@ export default class XCommandBar extends Vue {
   ];
 
   // Route
-  private goActionStr: String = "go";
-  private routeDateSet: SelectItem[] = [
-    {
-      name: this.goActionStr + "-home",
-      desc: "go to home page",
-      cmd: this.goRoute.bind(this, getIndexPath())
-    },
-    {
-      name: this.goActionStr + "-article-todo",
-      desc: "go to todo page",
-      cmd: this.goRoute.bind(this, getArticlePath("todo"))
-    },
-    {
-      name: this.goActionStr + "-tools",
-      desc: "go to tools index page",
-      cmd: this.goRoute.bind(this, toolsPath)
-    },
-    {
-      name: this.goActionStr + "-tools-editor",
-      desc: "go to markdown editor tools page",
-      cmd: this.goRoute.bind(this, editorPath)
+  private routeDateSet: SelectItem[] = [];
+  genRoute(): SelectItem[] {
+    let result: SelectItem[] = [];
+    let paths: string[] = [
+      getIndexPath(),
+      getArticlePath("todo"),
+      toolsPath,
+      editorPath
+    ];
+    if (this.paths) {
+      paths = paths.concat(this.paths);
     }
-  ];
-  goRoute(path: String) {
-    console.log(path);
+    for (let i = 0; i < paths.length; i++) {
+      let path = paths[i];
+      let item: SelectItem = {
+        name: path,
+        desc: "go to " + path,
+        cmd: this.goRoute.bind(this, path)
+      };
+      result.push(item);
+    }
+    return result;
+  }
+  goRoute(path: string) {
+    this.$router.push(path);
   }
 
   onEnterKeyDown(command: SelectItem) {
@@ -119,6 +122,19 @@ export default class XCommandBar extends Vue {
   mounted() {
     this.handlePageDatasetChange();
     this.onKeyDown();
+    this.fetchCatalog()
+      .catch(e => {
+        switch (e) {
+          case InvalidTokenError:
+            this.$message.warning("认证过期", 2);
+            return;
+          default:
+            this.$message.warning("获取文件列表失败", 2);
+        }
+      })
+      .finally(() => {
+        this.routeDateSet = this.genRoute();
+      });
   }
 }
 </script>
