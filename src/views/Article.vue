@@ -28,7 +28,7 @@ const articleDomID: string = "article";
 @Component({
   components: {
     markdown: Markdown,
-    loading: Loading,
+    loading: Loading
   },
   computed: {
     ...mapGetters({
@@ -38,6 +38,7 @@ const articleDomID: string = "article";
   },
   methods: {
     ...mapActions({
+      changePageDataSet: "command/changePageDataSet",
       fetchContent: "article/fetchContent"
     })
   }
@@ -49,20 +50,19 @@ export default class Article extends Vue {
   mounted() {
     this.path = "www.xiagaoxiawan.com" + this.$route.fullPath;
     let fid = getFidFromPath(this.$route);
-    this.fetchContent(fid)
-      .catch(e => {
-        switch (e) {
-          case UnauthorizedError:
-            this.$message.warning("需要授权", 2);
-            return;
-          case InvalidTokenError:
-            this.$message.warning("认证过期", 2);
-            return;
-          default:
-            this.$message.warning("未找到文章", 2);
-        }
-      })
-      .finally(() => {});
+    this.fetchContent(fid).catch(e => {
+      switch (e) {
+        case UnauthorizedError:
+          this.$message.warning("需要授权", 2);
+          return;
+        case InvalidTokenError:
+          this.$message.warning("认证过期", 2);
+          return;
+        default:
+          this.$message.warning("未找到文章", 2);
+      }
+    });
+    this.changePageDataSet(this.commandBarData);
   }
 
   private commandBarData: SelectItem[] = [

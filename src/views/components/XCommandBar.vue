@@ -28,6 +28,7 @@ import { InvalidTokenError } from "../../constants/error";
   },
   computed: {
     ...mapGetters({
+      pageDataset: "command/getPageDataSet",
       paths: "catalog/getPaths",
       catalogExpand: "catalog/isExpand"
     })
@@ -40,7 +41,6 @@ import { InvalidTokenError } from "../../constants/error";
   }
 })
 export default class XCommandBar extends Vue {
-  @Prop() private pageDataset!: SelectItem[];
   private showCommandBar: boolean = false;
   private commandType = "";
   private dataset: SelectItem[] = [];
