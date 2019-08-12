@@ -5,6 +5,7 @@ import Login from '@/views/Login.vue';
 import Article from '@/views/Article.vue';
 import Editor from '@/views/Editor.vue';
 import { tools } from './tools/index';
+import { demos } from './demos/index';
 
 Vue.use(Router);
 
@@ -59,6 +60,11 @@ const editor: RouteConfig = {
   },
 };
 
+let devs: RouteConfig[] = []
+if (process.env.NODE_ENV == "development") {
+  console.log("concat demos in development")
+  devs = devs.concat(demos)
+}
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -68,6 +74,7 @@ const router = new Router({
     article,
     editor,
     ...tools,
+    ...devs,
     {
       path: '*',
       redirect: '/',

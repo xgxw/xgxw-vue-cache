@@ -34,6 +34,9 @@
       v-bind:class="{ 'trigger-expand': expand }"
       @click="toggleExpand()"
     />
+    <div class="article" v-bind:class="{ 'catalog-expand': expand }">
+      当打开catalog时 article 块 左边距变化
+    </div>
   </div>
 </template>
 
@@ -69,6 +72,7 @@ export default class Catalog extends Vue {
 <style lang="scss" scoped>
 @import "@/assets/css/base.scss";
 @import "@/assets/css/zindex.scss";
+$menu-width: 15vw;
 
 .container {
   position: absolute;
@@ -105,7 +109,14 @@ export default class Catalog extends Vue {
 .trigger-expand {
   left: $menu-width !important;
 }
-//  v-bind:class="{ 'catalog-expand': expand }"
+
+// 如下为body内容, 测试使用
+.article {
+  width: 80vw;
+  height: 100vh;
+  background-color: aqua;
+  margin: auto 10vw;
+}
 .catalog-expand {
   margin-left: $menu-width;
 }
