@@ -81,11 +81,15 @@ export default class CommandBar extends Vue {
     this.command = suggest;
   }
 
+  // updateSuggests: 输入的关键字包含于 command.name
+  // 约定: 因path中不会出现 空格, 所以将空格替换为 `.*`, 方便输入
   updateSuggests() {
     this.focusIndex = -1;
     this.suggests = [];
+    let par = this.inputText.replace(/  */g, ".*");
+    let re = new RegExp(par);
     this.dataset.forEach(item => {
-      if (item.name.indexOf(this.inputText) != -1) {
+      if (re.test(item.name)) {
         this.suggests.push(item);
       }
     });

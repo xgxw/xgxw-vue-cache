@@ -19,6 +19,12 @@ import { getEditorPath, getArticlePath, getIndexPath } from "@/router";
 import { toolsPath, editorPath } from "@/router/tools";
 import { InvalidTokenError } from "../../constants/error";
 
+/*
+  Command 顺序:
+    1. 通用: urlDataSet(常用路径/命令) -> PageDataSet(当页所需的命令)
+    2. 导航: urlDataSet(常用路径/命令) -> catalog(目录树)
+ */
+
 @Component({
   components: {
     "command-bar": CommandBar
@@ -65,10 +71,10 @@ export default class XCommandBar extends Vue {
   @Watch("pageDataset")
   handlePageDatasetChange() {
     this.defaultDateSet = [];
+    this.defaultDateSet = this.defaultDateSet.concat(this.urlDataSet);
     if (this.pageDataset && this.pageDataset.length > 0) {
       this.defaultDateSet = this.defaultDateSet.concat(this.pageDataset);
     }
-    this.defaultDateSet = this.defaultDateSet.concat(this.urlDataSet);
   }
 
   // Route
@@ -82,7 +88,7 @@ export default class XCommandBar extends Vue {
         paths.push("/editor/" + path);
       }
     }
-    return this.transPath2SelectItem(paths).concat(this.urlDataSet);
+    return this.urlDataSet.concat(this.transPath2SelectItem(paths));
   }
   transPath2SelectItem(paths: string[]): SelectItem[] {
     let result: SelectItem[] = [];

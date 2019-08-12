@@ -1,6 +1,5 @@
 commandBar改进
-1. 添加高度限制
-3. 优化显示, editor/article 如此之多的网页如何更好的战士
+1. 优化显示, editor/article 如此之多的网页如何更好的战士
 4. 是否去掉 单路径 url? 还是打开后展示相应的目录树
 
 feature
