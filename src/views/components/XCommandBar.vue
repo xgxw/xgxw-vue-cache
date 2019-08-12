@@ -26,7 +26,7 @@ import { InvalidTokenError } from "../../constants/error";
   computed: {
     ...mapGetters({
       pageDataset: "command/getPageDataSet",
-      paths: "command/getPaths",
+      paths: "command/getPaths"
     })
   },
   methods: {
@@ -40,24 +40,41 @@ export default class XCommandBar extends Vue {
   private commandType = "";
   private dataset: SelectItem[] = [];
   private defaultDateSet: SelectItem[] = [];
+  private urlDataSet: SelectItem[] = [
+    {
+      name: "go" + "_home",
+      desc: "go to home page",
+      cmd: this.goRoute.bind(this, getIndexPath())
+    },
+    {
+      name: "go" + "_todo",
+      desc: "go to todo page",
+      cmd: this.goRoute.bind(this, getArticlePath("todo"))
+    },
+    {
+      name: "go" + "_tools",
+      desc: "go to tools index page",
+      cmd: this.goRoute.bind(this, toolsPath)
+    },
+    {
+      name: "go" + "_tools_editor",
+      desc: "go to markdown editor tools page",
+      cmd: this.goRoute.bind(this, editorPath)
+    }
+  ];
   @Watch("pageDataset")
   handlePageDatasetChange() {
     this.defaultDateSet = [];
     if (this.pageDataset && this.pageDataset.length > 0) {
       this.defaultDateSet = this.defaultDateSet.concat(this.pageDataset);
     }
+    this.defaultDateSet = this.defaultDateSet.concat(this.urlDataSet);
   }
 
   // Route
   private routeDateSet: SelectItem[] = [];
-  genRoute(): SelectItem[] {
-    let result: SelectItem[] = [];
-    let paths: string[] = [
-      getIndexPath(),
-      getArticlePath("todo"),
-      toolsPath,
-      editorPath
-    ];
+  genRouteDateSet(): SelectItem[] {
+    let paths: string[] = [];
     if (this.paths) {
       for (let i = 0; i < this.paths.length; i++) {
         let path = this.paths[i];
@@ -65,6 +82,10 @@ export default class XCommandBar extends Vue {
         paths.push("/editor/" + path);
       }
     }
+    return this.transPath2SelectItem(paths).concat(this.urlDataSet);
+  }
+  transPath2SelectItem(paths: string[]): SelectItem[] {
+    let result: SelectItem[] = [];
     for (let i = 0; i < paths.length; i++) {
       let path = paths[i];
       let item: SelectItem = {
@@ -124,7 +145,7 @@ export default class XCommandBar extends Vue {
         }
       })
       .finally(() => {
-        this.routeDateSet = this.genRoute();
+        this.routeDateSet = this.genRouteDateSet();
       });
   }
 }

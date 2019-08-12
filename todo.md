@@ -3,7 +3,6 @@ commandBar改进
 2. 添加高度限制
 3. 优化显示, editor/article 如此之多的网页如何更好的战士
 4. 是否去掉 单路径 url? 还是打开后展示相应的目录树
-5. 添加 点击功能, 支持 hover/click
 
 feature
 1. 增加文档功能: 前后端都需要
