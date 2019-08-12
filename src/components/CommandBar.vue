@@ -19,6 +19,7 @@
         v-for="(suggest,index) in suggests"
         :key="suggest.name"
         tabindex="-1"
+        v-on:click.stop="runCmd(suggest)"
       >
         <span class="command-item-name">{{suggest.name}}</span>
         <span class="command-item-desc">{{suggest.desc}}</span>
@@ -74,7 +75,7 @@ export default class CommandBar extends Vue {
     return this.focusIndex;
   }
 
-  handleFocus() {
+  handleTab() {
     let suggest = this.suggests[this.focusIndex];
     this.inputText = suggest.name;
     this.command = suggest;
@@ -99,6 +100,11 @@ export default class CommandBar extends Vue {
     });
   }
 
+  runCmd(cmd: SelectItem) {
+    this.$emit("onEnterKeyDown", cmd);
+    cmd.cmd();
+  }
+
   onKeyDown() {
     let onkeydown = (e: KeyboardEvent) => {
       switch (true) {
@@ -108,15 +114,14 @@ export default class CommandBar extends Vue {
           } else {
             this.nextFocusIndex();
           }
-          this.handleFocus();
+          this.handleTab();
           e.stopPropagation();
           e.preventDefault();
           break;
         }
         case e.keyCode === KeyCode.enter && this.visible: {
           if (this.command && this.command.cmd) {
-            this.command.cmd();
-            this.$emit("onEnterKeyDown", this.command);
+            this.runCmd(this.command);
           }
           break;
         }
@@ -202,7 +207,7 @@ $color-hover: #1c1c1c;
     }
   }
 
-  // .command-item:hover,
+  .command-item:hover,
   .command-item-focus {
     background-color: $background-color-hover !important;
     color: $color-hover !important;
