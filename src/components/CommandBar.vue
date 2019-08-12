@@ -193,8 +193,10 @@ $color-hover: #1c1c1c;
 }
 
 .command-items {
+  max-height: 40vh;
   padding: 0;
   margin: 1.5rem 0 0;
+  overflow-y: auto;
 
   .command-item {
     background-color: $background-color;
@@ -216,5 +218,8 @@ $color-hover: #1c1c1c;
   .stripe {
     background-color: $background-color-stripe;
   }
+}
+.command-items::-webkit-scrollbar {
+  display: none;
 }
 </style>

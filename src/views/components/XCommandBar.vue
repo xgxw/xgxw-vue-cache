@@ -42,23 +42,23 @@ export default class XCommandBar extends Vue {
   private defaultDateSet: SelectItem[] = [];
   private urlDataSet: SelectItem[] = [
     {
-      name: "go" + "_home",
-      desc: "go to home page",
+      name: getIndexPath(),
+      desc: "去首页",
       cmd: this.goRoute.bind(this, getIndexPath())
     },
     {
-      name: "go" + "_todo",
-      desc: "go to todo page",
+      name: getArticlePath("todo"),
+      desc: "去待办页",
       cmd: this.goRoute.bind(this, getArticlePath("todo"))
     },
     {
-      name: "go" + "_tools",
-      desc: "go to tools index page",
+      name: toolsPath,
+      desc: "去工具导航",
       cmd: this.goRoute.bind(this, toolsPath)
     },
     {
-      name: "go" + "_tools_editor",
-      desc: "go to markdown editor tools page",
+      name: editorPath,
+      desc: "打开Markdown本地编辑器",
       cmd: this.goRoute.bind(this, editorPath)
     }
   ];
