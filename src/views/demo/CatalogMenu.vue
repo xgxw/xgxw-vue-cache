@@ -28,12 +28,12 @@
         <a-menu-item key="9">Option 9</a-menu-item>
       </a-sub-menu>
     </a-menu>
-    <!-- <a-icon
+    <a-icon
       :type="expand ? 'left' : 'right'"
       class="trigger"
       v-bind:class="{ 'trigger-expand': expand }"
       @click="toggleExpand()"
-    />-->
+    />
   </div>
 </template>
 
@@ -41,7 +41,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { client } from "@/api/index";
 import { Menu, Icon } from "ant-design-vue";
-import { mapGetters, mapActions } from "vuex";
 
 @Component({
   components: {
@@ -50,25 +49,18 @@ import { mapGetters, mapActions } from "vuex";
     "a-sub-menu": Menu.SubMenu,
     "a-menu-item-group": Menu.ItemGroup,
     "a-icon": Icon
-  },
-  computed: {
-    ...mapGetters({
-      catalog: "catalog/getCatalog",
-      expand: "catalog/isExpand"
-    })
-  },
-  methods: {
-    ...mapActions({
-      toggleExpand: "catalog/toggleExpand"
-    })
   }
 })
 export default class Catalog extends Vue {
+  private expand: boolean = true;
   handleClick(data: any) {
     console.log("handleClick: ", data);
   }
   titleClick(data: any) {
     console.log("titleClick: ", data);
+  }
+  toggleExpand() {
+    this.expand = !this.expand;
   }
   mounted() {}
 }
@@ -112,6 +104,10 @@ export default class Catalog extends Vue {
 }
 .trigger-expand {
   left: $menu-width !important;
+}
+//  v-bind:class="{ 'catalog-expand': expand }"
+.catalog-expand {
+  margin-left: $menu-width;
 }
 </style>
 

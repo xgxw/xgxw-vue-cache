@@ -6,13 +6,11 @@
       :commandType="commandType"
       :dataset="dataset"
     />
-    <catalog v-show="catalogExpand" />
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Catalog from "./Catalog.vue";
 import CommandBar from "@/components/CommandBar.vue";
 import { SelectItem, CommandType } from "@/constants/command";
 import { KeyCode } from "@/util/keycode";
@@ -23,20 +21,17 @@ import { InvalidTokenError } from "../../constants/error";
 
 @Component({
   components: {
-    catalog: Catalog,
     "command-bar": CommandBar
   },
   computed: {
     ...mapGetters({
       pageDataset: "command/getPageDataSet",
-      paths: "catalog/getPaths",
-      catalogExpand: "catalog/isExpand"
+      paths: "command/getPaths",
     })
   },
   methods: {
     ...mapActions({
-      fetchCatalog: "catalog/fetchCatalog",
-      toggleCatalog: "catalog/toggleExpand"
+      fetchCatalog: "command/fetchCatalog"
     })
   }
 })
@@ -48,20 +43,10 @@ export default class XCommandBar extends Vue {
   @Watch("pageDataset")
   handlePageDatasetChange() {
     this.defaultDateSet = [];
-    this.defaultDateSet = this.defaultDateSet.concat(this.catalogDataSet);
     if (this.pageDataset && this.pageDataset.length > 0) {
       this.defaultDateSet = this.defaultDateSet.concat(this.pageDataset);
     }
   }
-
-  // Catalog
-  private catalogDataSet: SelectItem[] = [
-    {
-      name: "toggle-catalog-menu",
-      desc: "切换菜单显示",
-      cmd: this.toggleCatalog.bind(this)
-    }
-  ];
 
   // Route
   private routeDateSet: SelectItem[] = [];

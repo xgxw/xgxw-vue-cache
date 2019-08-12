@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-bind:class="{ 'catalog-expand': catalogExpand }">
+  <div class="container">
     <loading :spinning="fetching" />
     <editor-component :isMobile="isMobile" :content="content" :save="save" />
   </div>
@@ -19,7 +19,6 @@ import { isMobile } from "@/util/util";
   },
   computed: {
     ...mapGetters({
-      catalogExpand: "catalog/isExpand",
       content: "article/getContent",
       fetching: "article/isFetching"
     })
