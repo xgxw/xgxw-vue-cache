@@ -1,13 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import menu from './menu'
+import file from './file'
+import command from './command'
 import article from './article'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    menu,
-    article
+    file,
+    article,
+    command
   },
 });

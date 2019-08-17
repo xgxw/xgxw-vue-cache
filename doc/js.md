@@ -17,3 +17,5 @@ e.preventDefault();
 冒泡: 当鼠标点击/触发dom事件时, 浏览器会从根节点开始由外到内进行事件传播, 即点击了子元素, 如果父元素通过事件捕获方式注册了对应的事件的话, 会先触发父元素绑定的事件.
 
 `e.stopPropagation()` 只会阻止事件冒泡, 即该dom的父dom上的事件触发, 而该dom的多个 Listener 不会被阻止.
+
+`document.addEventListener()` 添加的监听者并不会影响系统的处理, 两个是独立的.

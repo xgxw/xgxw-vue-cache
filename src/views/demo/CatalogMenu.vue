@@ -28,12 +28,15 @@
         <a-menu-item key="9">Option 9</a-menu-item>
       </a-sub-menu>
     </a-menu>
-    <!-- <a-icon
+    <a-icon
       :type="expand ? 'left' : 'right'"
       class="trigger"
       v-bind:class="{ 'trigger-expand': expand }"
       @click="toggleExpand()"
-    /> -->
+    />
+    <div class="article" v-bind:class="{ 'catalog-expand': expand }">
+      当打开catalog时 article 块 左边距变化
+    </div>
   </div>
 </template>
 
@@ -41,7 +44,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { client } from "@/api/index";
 import { Menu, Icon } from "ant-design-vue";
-import { mapGetters, mapActions } from "vuex";
 
 @Component({
   components: {
@@ -50,24 +52,18 @@ import { mapGetters, mapActions } from "vuex";
     "a-sub-menu": Menu.SubMenu,
     "a-menu-item-group": Menu.ItemGroup,
     "a-icon": Icon
-  },
-  computed: {
-    ...mapGetters({
-      expand: "menu/isExpand"
-    })
-  },
-  methods: {
-    ...mapActions({
-      toggleExpand: "menu/toggleExpand"
-    })
   }
 })
-export default class CatalogMenu extends Vue {
+export default class Catalog extends Vue {
+  private expand: boolean = true;
   handleClick(data: any) {
     console.log("handleClick: ", data);
   }
   titleClick(data: any) {
     console.log("titleClick: ", data);
+  }
+  toggleExpand() {
+    this.expand = !this.expand;
   }
   mounted() {}
 }
@@ -76,6 +72,7 @@ export default class CatalogMenu extends Vue {
 <style lang="scss" scoped>
 @import "@/assets/css/base.scss";
 @import "@/assets/css/zindex.scss";
+$menu-width: 15vw;
 
 .container {
   position: absolute;
@@ -111,6 +108,17 @@ export default class CatalogMenu extends Vue {
 }
 .trigger-expand {
   left: $menu-width !important;
+}
+
+// 如下为body内容, 测试使用
+.article {
+  width: 80vw;
+  height: 100vh;
+  background-color: aqua;
+  margin: auto 10vw;
+}
+.catalog-expand {
+  margin-left: $menu-width;
 }
 </style>
 

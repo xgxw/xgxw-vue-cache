@@ -7,12 +7,11 @@
     :toolbarsFlag="showToolbar"
     :fontSize="fontSize"
     @save="save"
-    @change="change"
   />
 </template>
 
 <script lang="ts">
-import { Component, Prop, PropSync, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import mavonEditor from "mavon-editor";
 import { Mode, ToolbarsStyle, FontSize } from "@/constants/mavon-editor";
 import "mavon-editor/dist/css/index.css";
@@ -25,7 +24,6 @@ import "mavon-editor/dist/css/index.css";
 export default class Editor extends Vue {
   @Prop() private isMobile!: boolean;
   @Prop() private save!: any;
-  @Prop() private change!: any;
   @Prop() private content!: string;
   private mode: string = Mode.default;
   get subfield() {

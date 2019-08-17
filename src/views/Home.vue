@@ -1,12 +1,18 @@
 <template>
-  <div class='container'>
+  <div class="container">
+    <tree />
   </div>
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
+import Tree from "@/components/Tree.tsx";
 
-@Component({})
+@Component({
+  components: {
+    tree: Tree
+  }
+})
 export default class Home extends Vue {
   mounted() {}
 }

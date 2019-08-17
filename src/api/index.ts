@@ -35,6 +35,15 @@ export class HTTPClient {
       method: "GET",
     })
   }
+  async createFile(r: CreateFileRequset): Promise<CreateFileResponse> {
+    return this.requestWithToken({
+      url: 'v1/file/' + r.fid,
+      method: "POST",
+      data: {
+        ...r
+      }
+    })
+  }
   async uploadFile(r: UploadFileRequset): Promise<UploadFileResponse> {
     return this.requestWithToken({
       url: 'v1/file/' + r.fid,
@@ -42,6 +51,34 @@ export class HTTPClient {
       data: {
         ...r
       }
+    })
+  }
+  async delFile(r: DelFileRequset): Promise<DelFileResponse> {
+    return this.requestWithToken({
+      url: 'v1/file/' + r.fid,
+      method: "DELETE",
+    })
+  }
+  async delFiles(r: DelFilesRequset): Promise<DelFilesResponse> {
+    return this.requestWithToken({
+      url: 'v1/file',
+      method: "DELETE",
+      data: {
+        ...r
+      }
+    })
+  }
+  async fetchCatalog(r: FetchCatalogRequset): Promise<FetchCatalogResponse> {
+    return tokenClient.getTokenInfo().then((token: TokenInfo) => {
+      return this.requestWithToken({
+        url: 'v1/file/catalog?options=1',
+        method: "GET",
+      })
+    }).catch(e => {
+      return this.request({
+        url: 'v1/file/public/catalog?options=1',
+        method: "GET",
+      })
     })
   }
 
@@ -85,7 +122,7 @@ export class HTTPClient {
             case 404:
               return reject(NotFoundError)
             default:
-                return reject(e)
+              return reject(e)
           }
         } else if (e.request) {
           return reject(NotFoundError)
@@ -111,10 +148,7 @@ export class HTTPClient {
   // 当有 token 时带token, 没有时不带token的请求
   async requestAttachToken(req: Axios.AxiosRequestConfig): Promise<any> {
     return tokenClient.getTokenInfo().then((token: TokenInfo) => {
-      req.headers = {
-        "Authorization": token.token
-      }
-      return this.request(req)
+      return this.requestWithToken(req)
     }).catch(e => {
       return this.request(req)
     })
@@ -152,3 +186,24 @@ export interface UploadFileRequset {
   content: string
 }
 export interface UploadFileResponse { }
+
+export type CreateFileRequset = UploadFileRequset
+export type CreateFileResponse = UploadFileResponse
+
+export interface DelFileRequset {
+  fid: string
+}
+export interface DelFileResponse { }
+
+export interface DelFilesRequset {
+  fids: string[]
+}
+export interface DelFilesResponse { }
+
+export interface FetchCatalogRequset { }
+export interface FetchCatalogResponse {
+  data: {
+    catalog: {},
+    paths: string[]
+  }
+}

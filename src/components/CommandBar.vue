@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-show="visible">
     <div class="command-bar">
-      <span>{{commandType}}:</span>
+      <span>{{commandType}} :</span>
       <input
         id="command-bar-input"
         v-model="inputText"
@@ -14,13 +14,12 @@
     </div>
     <ul class="command-items">
       <li
-        :id="['item_'+index]"
         class="command-item"
-        :class="{'stripe':index%2 != 1}"
+        :class="{'stripe':index%2 != 1,'command-item-focus':focusIndex==index}"
         v-for="(suggest,index) in suggests"
         :key="suggest.name"
-        @focus="handleFocus(suggest)"
         tabindex="-1"
+        v-on:click.stop="runCmd(suggest)"
       >
         <span class="command-item-name">{{suggest.name}}</span>
         <span class="command-item-desc">{{suggest.desc}}</span>
@@ -32,12 +31,7 @@
 <script lang='ts'>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { KeyCode, isEditKey } from "@/util/keycode";
-
-export interface SelectItem {
-  name: string;
-  desc: string;
-  cmd: () => void;
-}
+import { SelectItem } from "@/constants/command";
 
 // 模仿 [chrome-vim](https://github.com/1995eaton/chromium-vim)
 
@@ -81,17 +75,21 @@ export default class CommandBar extends Vue {
     return this.focusIndex;
   }
 
-  // handleFocus 当item获取焦点时触发的操作
-  handleFocus(suggest: SelectItem) {
+  handleTab() {
+    let suggest = this.suggests[this.focusIndex];
     this.inputText = suggest.name;
     this.command = suggest;
   }
 
+  // updateSuggests: 输入的关键字包含于 command.name
+  // 约定: 因path中不会出现 空格, 所以将空格替换为 `.*`, 方便输入
   updateSuggests() {
     this.focusIndex = -1;
     this.suggests = [];
+    let par = this.inputText.replace(/  */g, ".*");
+    let re = new RegExp(par);
     this.dataset.forEach(item => {
-      if (item.name.indexOf(this.inputText) != -1) {
+      if (re.test(item.name)) {
         this.suggests.push(item);
       }
     });
@@ -106,33 +104,32 @@ export default class CommandBar extends Vue {
     });
   }
 
+  runCmd(cmd: SelectItem) {
+    this.$emit("onEnterKeyDown", cmd);
+    cmd.cmd();
+  }
+
   onKeyDown() {
     let onkeydown = (e: KeyboardEvent) => {
       switch (true) {
         case e.keyCode == KeyCode.tab && this.visible: {
-          let id = "item_";
           if (e.shiftKey) {
-            id = id + this.prevFocusIndex();
+            this.prevFocusIndex();
           } else {
-            id = id + this.nextFocusIndex();
+            this.nextFocusIndex();
           }
-          this.focusDom(id);
+          this.handleTab();
           e.stopPropagation();
           e.preventDefault();
           break;
         }
         case e.keyCode === KeyCode.enter && this.visible: {
           if (this.command && this.command.cmd) {
-            this.command.cmd();
-            this.$emit("onEnterKeyDown", this.command);
+            this.runCmd(this.command);
           }
           break;
         }
         case (isEditKey(e) || e.keyCode == KeyCode.backspace) && this.visible: {
-          // 按键监听流程: 当 keydown 时将焦点聚焦到 input 框, 然后系统处理, 然后 keyup 处理, 更新 suggests
-          // 之所以不在 keydown 中全部处理(如增删inputText)然后 `return false`, 是因为
-          // 当使用 addEventListener 监听时会触发两次增删(系统处理一次, 自身一次),
-          // 除非使用 document.onkeydown=fun(), 而非 addEventListener
           this.focusDom("command-bar-input");
           break;
         }
@@ -180,15 +177,19 @@ $color-hover: #1c1c1c;
   line-height: 1.5rem;
   background-color: $background-color;
   color: $color;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  padding-left: 0.2rem;
+  display: flex;
+  justify-content: space-between;
 
   .command-bar-input {
+    flex-grow: 1;
+    margin-left: 0.5rem;
     background-color: $background-color;
     color: $color;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: calc(100% - 10px);
-    height: 1.5rem;
     box-sizing: border-box;
     outline-style: none;
     border: 0;
@@ -196,8 +197,10 @@ $color-hover: #1c1c1c;
 }
 
 .command-items {
+  max-height: 40vh;
   padding: 0;
-  margin: 0;
+  margin: 1.5rem 0 0;
+  overflow-y: auto;
 
   .command-item {
     background-color: $background-color;
@@ -210,14 +213,17 @@ $color-hover: #1c1c1c;
     }
   }
 
-  // .command-item:hover,
-  .command-item:focus {
-    background-color: $background-color-hover;
-    color: $color-hover;
+  .command-item:hover,
+  .command-item-focus {
+    background-color: $background-color-hover !important;
+    color: $color-hover !important;
   }
 
   .stripe {
     background-color: $background-color-stripe;
   }
+}
+.command-items::-webkit-scrollbar {
+  display: none;
 }
 </style>
