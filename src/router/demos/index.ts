@@ -7,7 +7,7 @@ export const catalog: RouteConfig = {
     name: 'demo_catalog',
     component: Catalog,
     meta: {
-        title: '工具-编辑',
+        title: '示例-目录',
     },
 };
 

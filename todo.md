@@ -1,6 +1,7 @@
 commandBar改进
-1. 优化显示, editor/article 如此之多的网页如何更好的战士
-4. 是否去掉 单路径 url? 还是打开后展示相应的目录树
+1. 完成Home目录树, 然后改造各文件目录树
+2. catalog 数据缓存/更新策略
+3. del/add path
 
 feature
 1. 增加文档功能: 前后端都需要
@@ -8,6 +9,7 @@ feature
     - 介绍网站使用, 如 alt+space 切出菜单栏
     - 偶尔说一些 "名言"(网上抄的, 自己写的, 都行)
     - 添加对话功能, 可以介入小冰等api或者自己学AI技术
+3. markdown -> ppt: nodeppt/reveal.js
 
 其他代办
 1. Login页面完善
