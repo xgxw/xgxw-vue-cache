@@ -15,7 +15,7 @@ import {
   UnauthorizedError,
   NotFoundError,
   InvalidTokenError
-} from "../constants/error";
+} from "@/constants/error";
 import { isMobile } from "@/util/util";
 
 @Component({

@@ -17,7 +17,7 @@ import { KeyCode } from "@/util/keycode";
 import { mapGetters, mapActions } from "vuex";
 import { getEditorPath, getArticlePath, getIndexPath } from "@/router";
 import { toolsPath, editorPath } from "@/router/tools";
-import { InvalidTokenError } from "../../constants/error";
+import { InvalidTokenError } from "@/constants/error";
 
 /*
   Command 顺序:

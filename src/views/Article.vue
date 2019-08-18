@@ -15,7 +15,7 @@ import {
   UnauthorizedError,
   NotFoundError,
   InvalidTokenError
-} from "../constants/error";
+} from "@/constants/error";
 import { getFidFromPath } from "@/constants/guard";
 import { isMobile } from "@/util/util";
 import { getEditorPath } from "@/router";

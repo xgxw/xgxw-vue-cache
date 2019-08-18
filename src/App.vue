@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CommandBar from "@/views/components/XCommandBar.vue";
+import CommandBar from "@/views/share/XCommandBar.vue";
 
 @Component({
   components: {
