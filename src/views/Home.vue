@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <tree />
+    <tree :data="data"/>
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import Tree from "@/components/Tree.tsx";
   }
 })
 export default class Home extends Vue {
+  private data:{} = {"public":{"task.csv":"task.csv","test":{}}} 
   mounted() {}
 }
 </script>

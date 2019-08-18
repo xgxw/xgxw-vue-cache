@@ -1,5 +1,5 @@
 import Vue, { CreateElement } from 'vue'
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 
 import { Tree as AntdTree} from "ant-design-vue";
 const DirectoryTree = AntdTree.DirectoryTree;
@@ -12,7 +12,7 @@ const TreeNode = AntdTree.TreeNode;
   }
 })
 export default class Tree extends Vue {
-  private data: {} = { public: { "task.csv": "task.csv", test: {} } };
+  @Prop() private data!: {};
   onSelect(keys: any) {
     console.log("Trigger Select", keys);
   }
@@ -30,16 +30,25 @@ export default class Tree extends Vue {
         )
         e.push(temp);
       } else {
-        e.push(<a-tree-node title="leaf 1-1" key="0-1-1" isLeaf />)
+        e.push(<a-tree-node title={key} key={data[key]} isLeaf />)
       }
     }
     return e
   }
   render(h:CreateElement) {
-    return (
-      <a-directory-tree multiple defaultExpandAll>
-        {this.getTreeNode(this.data)}
-      </a-directory-tree>
+    return h(
+      "a-directory-tree",
+      {
+        attrs:{
+          "multiple":true,
+          "defaultExpandAll":true,
+        },
+        on:{
+          select:this.onSelect,
+          expand:this.onExpand,
+        }
+      },
+      this.getTreeNode(this.data)
     )
   }
 }

@@ -10,6 +10,8 @@ feature
     - 偶尔说一些 "名言"(网上抄的, 自己写的, 都行)
     - 添加对话功能, 可以介入小冰等api或者自己学AI技术
 3. markdown -> ppt: nodeppt/reveal.js
+4. 添加导航到其他网站
+    - starkoverflow/ github.explore/infoq
 
 其他代办
 1. Login页面完善
