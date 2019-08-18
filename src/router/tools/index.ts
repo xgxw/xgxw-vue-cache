@@ -22,13 +22,5 @@ export const editor: RouteConfig = {
     title: '工具-编辑',
   },
 };
-export const test: RouteConfig = {
-  path: '/tools/test',
-  name: 'tools_test',
-  component: TestPage,
-  meta: {
-    title: '工具-测试',
-  },
-};
 
-export const tools: RouteConfig[] = [index, editor, test]
+export const tools: RouteConfig[] = [index, editor]
