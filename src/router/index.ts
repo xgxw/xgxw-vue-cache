@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router, { RouteConfig } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
-import Article from '@/views/Article.vue';
+import Reader from '@/views/Reader.vue';
 import Editor from '@/views/Editor.vue';
 import { tools } from './tools/index';
 import { demos } from './demos/index';
@@ -34,14 +34,14 @@ const login: RouteConfig = {
   },
 };
 
-const articlePath: string = '/article/';
-export function getArticlePath(fid: string) {
-  return articlePath + fid;
+const readerPath: string = '/reader/';
+export function getReaderPath(fid: string) {
+  return readerPath + fid;
 }
-const article: RouteConfig = {
-  path: articlePath + "*",
-  name: 'article',
-  component: Article,
+const reader: RouteConfig = {
+  path: readerPath + "*",
+  name: 'reader',
+  component: Reader,
   meta: {
     title: "文章",
   },
@@ -71,14 +71,10 @@ const router = new Router({
   routes: [
     index,
     login,
-    article,
+    reader,
     editor,
     ...tools,
-    ...devs,
-    {
-      path: '*',
-      redirect: '/',
-    },
+    ...devs
   ],
 });
 

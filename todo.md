@@ -1,6 +1,6 @@
 commandBar改进
 1. 完成Home目录树, 然后改造各文件目录树
-2. catalog 数据缓存/更新策略
+2. catalog 数据缓存/更新策略, 放在 commandbar 是否合适?
 3. del/add path
 
 feature

@@ -15,7 +15,7 @@ import CommandBar from "@/components/CommandBar.vue";
 import { SelectItem, CommandType } from "@/constants/command";
 import { KeyCode } from "@/util/keycode";
 import { mapGetters, mapActions } from "vuex";
-import { getEditorPath, getArticlePath, getIndexPath } from "@/router";
+import { getEditorPath, getReaderPath, getIndexPath } from "@/router";
 import { toolsPath, editorPath } from "@/router/tools";
 import { InvalidTokenError } from "@/constants/error";
 
@@ -53,9 +53,9 @@ export default class XCommandBar extends Vue {
       cmd: this.goRoute.bind(this, getIndexPath())
     },
     {
-      name: getArticlePath("todo"),
+      name: getReaderPath("todo"),
       desc: "去待办页",
-      cmd: this.goRoute.bind(this, getArticlePath("todo"))
+      cmd: this.goRoute.bind(this, getReaderPath("todo"))
     },
     {
       name: toolsPath,

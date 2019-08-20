@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue'
 import { Component, Prop } from "vue-property-decorator";
 
-import { Tree as AntdTree} from "ant-design-vue";
+import { Tree as AntdTree } from "ant-design-vue";
 const DirectoryTree = AntdTree.DirectoryTree;
 const TreeNode = AntdTree.TreeNode;
 
@@ -12,18 +12,18 @@ const TreeNode = AntdTree.TreeNode;
   }
 })
 export default class Tree extends Vue {
-  @Prop() private data!: {};
+  @Prop() private data!: string;
   onSelect(keys: any) {
     console.log("Trigger Select", keys);
   }
   onExpand() {
     console.log("Trigger Expand");
   }
-  getTreeNode(data: {}):JSX.Element[] {
-    let e:JSX.Element[] = [];
+  getTreeNode(data: {}): JSX.Element[] {
+    let e: JSX.Element[] = [];
     for (let key in data) {
       if (data[key] instanceof Object) {
-        let temp:JSX.Element = (
+        let temp: JSX.Element = (
           <a-tree-node key={key} title={key}>
             {this.getTreeNode(data[key])}
           </a-tree-node>
@@ -35,20 +35,21 @@ export default class Tree extends Vue {
     }
     return e
   }
-  render(h:CreateElement) {
+  render(h: CreateElement) {
+    let data = JSON.parse(this.data)
     return h(
       "a-directory-tree",
       {
-        attrs:{
-          "multiple":true,
-          "defaultExpandAll":true,
+        attrs: {
+          "multiple": true,
+          "defaultExpandAll": true,
         },
-        on:{
-          select:this.onSelect,
-          expand:this.onExpand,
+        on: {
+          select: this.onSelect,
+          expand: this.onExpand,
         }
       },
-      this.getTreeNode(this.data)
+      this.getTreeNode(data)
     )
   }
 }

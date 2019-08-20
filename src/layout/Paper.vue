@@ -3,7 +3,7 @@
     <article id="article" class="article">
       <slot></slot>
     </article>
-    <footer class="print-footer">{{path}}</footer>
+    <footer v-if="showFooter" class="print-footer">{{path}}</footer>
   </div>
 </template>
 
@@ -16,6 +16,9 @@ export default class Paper extends Vue {
   @Prop() path!: string;
   private isMobile = isMobile();
 
+  get showFooter() {
+    return this.path != null && this.path != "";
+  }
   mounted() {}
 }
 </script>

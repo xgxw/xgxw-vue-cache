@@ -4,7 +4,7 @@ import { SelectItem } from '@/constants/command';
 
 interface State {
   data: {
-    catalog: {},
+    catalog: string,
     paths: string[],
     pageDataSet: SelectItem[]
   }
@@ -12,7 +12,7 @@ interface State {
 
 const state: State = {
   data: {
-    catalog: {},
+    catalog: "",
     paths: [],
     pageDataSet: []
   }
@@ -22,7 +22,7 @@ const getters = {
   getPageDataSet: (state: State): SelectItem[] => {
     return state.data.pageDataSet
   },
-  getCatalog: (state: State): {} => {
+  getCatalog: (state: State): string => {
     return state.data.catalog
   },
   getPaths: (state: State): string[] => {
