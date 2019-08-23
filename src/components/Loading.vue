@@ -23,8 +23,10 @@ export default class Loading extends Vue {
 
 .container {
   position: absolute;
-  height: 100%;
-  width: 100%;
+  top:0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
   z-index: $loading;
   display: flex;
   flex-direction: column;

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router, { RouteConfig } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
-import Reader from '@/views/Reader.vue';
+import Reader from '@/views/reader/Reader.tsx';
 import Editor from '@/views/Editor.vue';
 import { tools } from './tools/index';
 import { demos } from './demos/index';

@@ -37,19 +37,10 @@ export default class Tree extends Vue {
   }
   render(h: CreateElement) {
     let data = JSON.parse(this.data)
-    return h(
-      "a-directory-tree",
-      {
-        attrs: {
-          "multiple": true,
-          "defaultExpandAll": true,
-        },
-        on: {
-          select: this.onSelect,
-          expand: this.onExpand,
-        }
-      },
-      this.getTreeNode(data)
+    return (
+      <a-directory-tree multiple defaultExpandAll onselect={this.onSelect} onexpand={this.onExpand}>
+        {this.getTreeNode(data)}
+      </a-directory-tree>
     )
   }
 }

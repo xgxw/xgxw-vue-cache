@@ -15,14 +15,13 @@ import { getFidFromPath } from "../../constants/guard";
   }
 })
 export default class Catalog extends Vue {
-  private data: {} = { public: { "task.csv": "task.csv", test: {} } };
+  private data: {} = '{ "public": { "task.csv": "task.csv", "test": {} } }';
   mounted() {
-    let fid = getFidFromPath(this.$route);
-    console.log(111, this.$route);
-    let paths = fid.split("/");
-    paths.forEach(path => {
-      console.log(path);
-    });
+    // let fid = getFidFromPath(this.$route);
+    // let paths = fid.split("/");
+    // paths.forEach(path => {
+    //   console.log(path);
+    // });
   }
 }
 </script>

@@ -84,8 +84,8 @@ export default class XCommandBar extends Vue {
     if (this.paths) {
       for (let i = 0; i < this.paths.length; i++) {
         let path = this.paths[i];
-        paths.push("/article/" + path);
-        paths.push("/editor/" + path);
+        paths.push(getReaderPath(path));
+        paths.push(getEditorPath(path));
       }
     }
     return this.urlDataSet.concat(this.transPath2SelectItem(paths));
@@ -140,19 +140,19 @@ export default class XCommandBar extends Vue {
   mounted() {
     this.handlePageDatasetChange();
     this.onKeyDown();
-    this.fetchCatalog()
-      .catch(e => {
-        switch (e) {
-          case InvalidTokenError:
-            this.$message.warning("认证过期", 2);
-            return;
-          default:
-            this.$message.warning("获取文件列表失败", 2);
-        }
-      })
-      .finally(() => {
-        this.routeDateSet = this.genRouteDateSet();
-      });
+    // this.fetchCatalog()
+    //   .catch(e => {
+    //     switch (e) {
+    //       case InvalidTokenError:
+    //         this.$message.warning("认证过期", 2);
+    //         return;
+    //       default:
+    //         this.$message.warning("获取文件列表失败", 2);
+    //     }
+    //   })
+    //   .finally(() => {
+    //     this.routeDateSet = this.genRouteDateSet();
+    //   });
   }
 }
 </script>
