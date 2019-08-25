@@ -1,8 +1,7 @@
 TODO
+1. Login页面完善
+1. token 续期的问题
 1. del/add path
-2. tree 选择/展开 事件传递. Tree/Catalog
-3. Home 页面内容. (写 Readme?)
-4. catalog 可以改为markdown? 服务端或本地直接生成markdown文档?
 
 feature
 1. 增加类似qq宠物的功能, 在页面展示, 同时后期提供如下功能
@@ -12,10 +11,7 @@ feature
 3. markdown -> ppt: nodeppt/reveal.js
 4. 添加导航到其他网站
     - starkoverflow/ github.explore/infoq
-
-其他代办
-1. Login页面完善
-3. nginx / jupyter.xgxw.com
+5. 部署: nginx / jupyter.xgxw.com
 
 后续改进
 1. catalog 最合理的加载和刷新方式. 目前先为全量读取, 在xcommand中去读.
@@ -23,9 +19,7 @@ feature
     - `@/views/share/XcommandBar.vue`: alt+g 时, 发送请求, 请求全量数据(带loading通知状态)
     - 页面内任何对 catalog 成功的变化, 即修改 vuex 状态, 以保持同步.
     - catalog 数据缓存到localstorage, 采取增量更新的方式.
-
-后期完善
-1. token 续期的问题
+2. catalog 可以改为markdown? 服务端或本地直接生成markdown文档?
 
 附加
 1. 好玩的博客样式如下: 游戏样式

@@ -41,7 +41,7 @@ export default class Paper extends Vue {
     min-height: 95vh;
     margin: 3vh auto;
     padding: 2rem 3rem;
-    width: 55%;
+    width: 60%;
   }
 }
 
