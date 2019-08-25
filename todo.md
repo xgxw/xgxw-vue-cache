@@ -12,6 +12,7 @@ feature
 4. 添加导航到其他网站
     - starkoverflow/ github.explore/infoq
 5. 部署: nginx / jupyter.xgxw.com
+6. 添加微信/支付宝OA认证
 
 后续改进
 1. catalog 最合理的加载和刷新方式. 目前先为全量读取, 在xcommand中去读.
