@@ -3,6 +3,7 @@ import { instanceOfRequestError, UnkownRequestError } from '@/constants/error';
 import { SelectItem } from '@/constants/command';
 
 interface State {
+  fetching: boolean
   data: {
     catalog: string,
     paths: string[],
@@ -11,8 +12,9 @@ interface State {
 };
 
 const state: State = {
+  fetching: false,
   data: {
-    catalog: "",
+    catalog: "{}",
     paths: [],
     pageDataSet: []
   }
@@ -22,8 +24,24 @@ const getters = {
   getPageDataSet: (state: State): SelectItem[] => {
     return state.data.pageDataSet
   },
+  isFetching: (state: State): boolean => {
+    return state.fetching
+  },
   getCatalog: (state: State): string => {
     return state.data.catalog
+  },
+  getCatalogByPath: (state: State) => (path: string) => {
+    let data = {}
+    if (path) {
+      data = JSON.parse(state.data.catalog);
+      let keys = path.split("/");
+      keys.forEach(key => {
+        if (key) {
+          if (data[key]) data = data[key];
+        }
+      });
+    }
+    return JSON.stringify(data)
   },
   getPaths: (state: State): string[] => {
     return state.data.paths
@@ -31,7 +49,7 @@ const getters = {
 }
 
 interface FetchCatalogData {
-  catalog: {},
+  catalog: string,
   paths: string[]
 }
 
@@ -42,12 +60,11 @@ const actions = {
       resolved()
     })
   },
-  async fetchCatalog({ commit }): Promise<any> {
+  async fetchCatalog({ commit }, r: FetchCatalogRequset): Promise<any> {
     commit("fetchCatalog")
     return new Promise<any>((resolved, reject) => {
-      let r: FetchCatalogRequset = {}
       let data: FetchCatalogData = {
-        catalog: {},
+        catalog: "{}",
         paths: []
       }
 
@@ -74,9 +91,11 @@ const mutations = {
     console.log("changePageDataSet: ", pageDataSet)
   },
   fetchCatalog(state: State) {
+    state.fetching = true
     console.log("fetchCatalog")
   },
   fetchCatalogFinish(state: State, data: FetchCatalogData) {
+    state.fetching = false
     state.data.catalog = data.catalog;
     state.data.paths = data.paths
     console.log("getCatalogFinish: ", data.catalog, data.paths)

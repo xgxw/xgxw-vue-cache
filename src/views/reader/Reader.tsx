@@ -12,16 +12,6 @@ import Catalog from "./Catalog.vue";
     }
 })
 export default class Reader extends Vue {
-    show() {
-        switch (true) {
-            case this.$route.fullPath && this.$route.fullPath.endsWith("/"):
-                return (<article />)
-            case this.$route.fullPath && !this.$route.fullPath.endsWith("/"):
-                return (<catalog />)
-            default:
-                return
-        }
-    }
     render(h: CreateElement) {
         let path = "www.xiagaoxiawan.com" + this.$route.fullPath;
         return (

@@ -71,12 +71,12 @@ export class HTTPClient {
   async fetchCatalog(r: FetchCatalogRequset): Promise<FetchCatalogResponse> {
     return tokenClient.getTokenInfo().then((token: TokenInfo) => {
       return this.requestWithToken({
-        url: 'v1/catalog/?options=1',
+        url: 'v1/catalog' + r.path + '?options=1',
         method: "GET",
       })
     }).catch(e => {
       return this.request({
-        url: 'v1/catalog/public/?options=1',
+        url: 'v1/catalog/public' + r.path + '?options=1',
         method: "GET",
       })
     })
@@ -200,7 +200,9 @@ export interface DelFilesRequset {
 }
 export interface DelFilesResponse { }
 
-export interface FetchCatalogRequset { }
+export interface FetchCatalogRequset {
+  path: string
+}
 export interface FetchCatalogResponse {
   data: {
     catalog: string,
