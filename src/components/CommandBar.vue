@@ -37,9 +37,9 @@ import { SelectItem } from "@/constants/command";
 
 @Component({})
 export default class CommandBar extends Vue {
-  @Prop() private commandType!: String;
-  @Prop() private dataset!: SelectItem[];
-  @Prop() private visible!: boolean;
+  @Prop() readonly commandType!: String;
+  @Prop() readonly dataset!: SelectItem[];
+  @Prop() readonly visible!: boolean;
   private command: SelectItem | null = null; // command 当前选中的命令
   private suggests: SelectItem[] = this.dataset; // suggests 建议的数据集
   private focusIndex: number = -1; // focusIndex 当前获取焦点的 command-item 项. 处理tab按键事件时使用

@@ -22,9 +22,9 @@ import "mavon-editor/dist/css/index.css";
   }
 })
 export default class Editor extends Vue {
-  @Prop() private isMobile!: boolean;
-  @Prop() private save!: any;
-  @Prop() private content!: string;
+  @Prop() readonly isMobile!: boolean;
+  @Prop() readonly save!: any;
+  @Prop() readonly content!: string;
   private mode: string = Mode.default;
   get subfield() {
     return !this.isMobile;

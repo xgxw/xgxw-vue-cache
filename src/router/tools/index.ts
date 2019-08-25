@@ -1,7 +1,6 @@
 import { RouteConfig } from 'vue-router';
 import Index from '@/views/tools/Index.vue';
 import Editor from '@/views/tools/Editor.vue';
-import TestPage from '@/views/tools/TestPage.vue';
 
 export const toolsPath = "/tools"
 export const index: RouteConfig = {

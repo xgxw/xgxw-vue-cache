@@ -14,7 +14,7 @@ import { Spin } from "ant-design-vue";
   }
 })
 export default class Loading extends Vue {
-  @Prop() private spinning!: Boolean;
+  @Prop() readonly spinning!: Boolean;
   mounted() {}
 }
 </script>

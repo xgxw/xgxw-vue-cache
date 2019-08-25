@@ -10,7 +10,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Markdown_bk extends Vue {
-  @Prop() private mkdoc!: string;
+  @Prop() readonly mkdoc!: string;
   private parse: any = null;
   private mounted() {
     this.parse = require('markdown').markdown;

@@ -38,7 +38,7 @@ const SelectOpt = Select.Option;
   }
 })
 export default class CommandBarModal extends Vue {
-  @Prop() private dataset!: SelectItem[];
+  @Prop() readonly dataset!: SelectItem[];
   private dataSource: SelectItem[] = this.dataset;
   @Watch("dataset")
   handleDataSetChange() {

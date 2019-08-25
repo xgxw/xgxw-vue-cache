@@ -22,8 +22,8 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
   components: {}
 })
 export default class TestPage extends Vue {
-  @Prop() private target!: HTMLElement;
-  @Prop() private show!: boolean;
+  @Prop() readonly target!: HTMLElement;
+  @Prop() readonly show!: boolean;
   private binded: boolean = false;
   private triggerShowFn!: (e: Event) => void;
   private triggerHideFn!: (e: Event) => void;
