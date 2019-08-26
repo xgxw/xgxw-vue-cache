@@ -1,38 +1,56 @@
 <template>
   <div class="container">
-    <div class="card">
-      <a-input placeholder="用户名" size="large" v-model="username" style="margin-bottom: 1rem;">
-        <a-icon slot="prefix" type="user" />
-        <a-icon v-if="username" slot="suffix" type="close-circle" @click="resetUsername" />
-      </a-input>
-      <a-input
-        style="margin-bottom: 2rem;"
-        size="large"
-        placeholder="密码, 按回车确认"
-        @change="handlePdInput"
-        @pressEnter="handlePdEnter"
-        :value="pdShow"
-      >
-        <a-icon slot="prefix" type="user" />
-        <a-icon v-if="password" slot="suffix" type="close-circle" @click="resetPassword" />
-      </a-input>
-      <div class="btn-group">
-        <a-button style="width:8rem;" @click="qrcodeLogin">二维码登录</a-button>
-        <a-button type="primary" style="width:8rem;" @click="login" :loading="logining">登录</a-button>
-      </div>
+    <div class="card pd-login">
+      <a-tabs>
+        <a-tab-pane tab="密码登录" key="1">
+          <a-input
+            placeholder="用户名"
+            size="large"
+            v-model="username"
+            style="margin: 0.5rem auto 1rem;"
+            allowClear
+          ></a-input>
+          <a-input
+            style="margin-bottom: 2rem;"
+            size="large"
+            placeholder="密码, 按回车确认"
+            @change="handlePdInput"
+            @pressEnter="handlePdEnter"
+            :value="pdShow"
+          ></a-input>
+        </a-tab-pane>
+        <a-tab-pane tab="验证码登录" key="2" forceRender>暂未实现</a-tab-pane>
+      </a-tabs>
+      <footer class="btn-group">
+        <a-button type="primary" style="width:6rem;" @click="login" :loading="logining">登录</a-button>
+      </footer>
+    </div>
+    <div class="card social-login">
+      <span>社交帐号登录</span>
+      <span>
+        <a class="social-login-link">
+          <a-icon type="alipay" />
+        </a>
+        <a class="social-login-link">
+          <a-icon type="wechat" />
+        </a>
+      </span>
     </div>
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Input, Icon, Button } from "ant-design-vue";
+import { Input, Icon, Button, Tabs } from "ant-design-vue";
+const TabPane = Tabs.TabPane;
 
 @Component({
   components: {
     "a-input": Input,
     "a-icon": Icon,
-    "a-button": Button
+    "a-button": Button,
+    "a-tabs": Tabs,
+    "a-tab-pane": TabPane
   }
 })
 export default class Login extends Vue {
@@ -52,8 +70,13 @@ export default class Login extends Vue {
       this.pdShow += "*";
       this.password += e.data;
     } else {
-      this.pdShow = this.pdShow.substring(0, this.pdShow.length - 1);
-      this.password = this.password.substring(0, this.password.length - 1);
+      if (e.inputType == "deleteContentBackward") {
+        this.pdShow = this.pdShow.substring(0, this.pdShow.length - 1);
+        this.password = this.password.substring(0, this.password.length - 1);
+      } else {
+        this.pdShow = "";
+        this.password = "";
+      }
     }
   }
   handlePdEnter() {
@@ -70,7 +93,7 @@ export default class Login extends Vue {
   requestLogin() {
     this.logining = false;
   }
-  
+
   mounted() {}
 }
 </script>
@@ -78,31 +101,49 @@ export default class Login extends Vue {
 @import "@/assets/css/base.scss";
 
 .container {
+  min-height: 100vh;
   overflow: hidden;
   -webkit-print-color-adjust: exact;
-  min-height: 100vh;
+  background-color: $backgroud-color;
 }
 .card {
-  // box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+  box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+  background-color: $white;
+  width: 25rem;
 }
 .btn-group {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 2rem;
+}
+.social-login-link {
+  font-size: 1.2rem;
+}
+.social-login-link:not(:last-child) {
+  margin-right: 1.2rem;
 }
 
 // PC端界面
 @media screen and (min-width: $mobile-width) {
-  .card {
-    width: 30rem;
-    margin: 20vh auto;
-    padding: 2rem 3rem;
+  .pd-login {
+    margin: 30vh auto 0;
+    padding: 1.5rem 2rem;
+  }
+  .social-login {
+    margin: 1.5rem auto 0;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    color: #8590a7;
+
+    display: flex;
+    justify-content: space-between;
   }
 }
 
 // 移动端界面
 @media screen and (max-width: $mobile-width) {
-  .card {
+  .pd-login {
     width: 90%;
     margin: 30vh auto;
   }

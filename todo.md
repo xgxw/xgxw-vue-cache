@@ -2,6 +2,7 @@ TODO
 1. Login页面完善
 1. token 续期的问题
 1. del/add path
+2. 根据语义化标签重改
 
 feature
 1. 增加类似qq宠物的功能, 在页面展示, 同时后期提供如下功能
