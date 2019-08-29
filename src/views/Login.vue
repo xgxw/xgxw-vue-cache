@@ -126,7 +126,7 @@ export default class Login extends Vue {
 // PC端界面
 @media screen and (min-width: $mobile-width) {
   .pd-login {
-    margin: 30vh auto 0;
+    margin: 25vh auto 0;
     padding: 1.5rem 2rem;
   }
   .social-login {

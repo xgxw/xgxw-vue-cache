@@ -1,8 +1,6 @@
 TODO
-1. Login页面完善
-1. token 续期的问题
+1. 用户系统, token 续期的问题
 1. del/add path
-2. 根据语义化标签重改
 
 feature
 1. 增加类似qq宠物的功能, 在页面展示, 同时后期提供如下功能
@@ -14,6 +12,7 @@ feature
     - starkoverflow/ github.explore/infoq
 5. 部署: nginx / jupyter.xgxw.com
 6. 添加微信/支付宝OA认证
+7. 根据语义化标签重改
 
 后续改进
 1. catalog 最合理的加载和刷新方式. 目前先为全量读取, 在xcommand中去读.
